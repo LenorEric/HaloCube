@@ -46,9 +46,9 @@ void OLED_Refresh(void) {
 }
 
 void OLED_Init(void) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
     HAL_Delay(0);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
     HAL_Delay(10);
     OLED_I2C_Write_DMA(0x00, CMD_Data, sizeof(CMD_Data));
 }

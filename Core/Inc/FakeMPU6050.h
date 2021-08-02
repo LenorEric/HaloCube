@@ -10,7 +10,6 @@
 
 #define FakeMPU6050_ADDRESS 0x68
 
-void MPU6050_init();
 void FGetDirection(uint8_t *direction);
 
 #endif //HALOCUBE_DEV_FakeMPU6050_H

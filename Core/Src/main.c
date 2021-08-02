@@ -85,7 +85,7 @@ static void MX_IWDG_Init(void);
 uint8_t RENDERED_FLAG = 0;
 uint8_t GLOBAL_INITED_FLAG = 0;
 uint8_t GLOBAL_SELECT_FLAG = 0;
-uint8_t GLOBAL_REFRESHING_FLAG = 0;
+uint8_t REFRESHING_FLAG = 0;
 ///[0] for direction, x-> y^, from 0 ~ 255(map from 0~360), pos is x-pos
 ///[1] for angel, pos is y-pos, from 0 ~ 90
 uint8_t GLOBAL_DIRECTION_INDICATOR[2] = {0x0};
@@ -97,20 +97,24 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM14) {
         GLOBAL_FRAME_INDICATOR++;
         if (RENDERED_FLAG) {
-            GLOBAL_REFRESHING_FLAG = 1;
+            REFRESHING_FLAG = 1;
         }
         return;
     }
     if (htim->Instance == TIM13) {
-        if (!RENDERED_FLAG && !GLOBAL_REFRESHING_FLAG) {
+        if (!RENDERED_FLAG && !REFRESHING_FLAG) {
             if (RenderListGet()())
                 RenderListPop();
             RENDERED_FLAG = 1;
         }
+        if (REFRESHING_FLAG){
+            OLED_Auto_Refresh();
+            REFRESHING_FLAG = 0;
+            RENDERED_FLAG = 0;
+        }
         return;
     }
     if (htim->Instance == TIM11) {
-        HAL_IWDG_Refresh(&hiwdg);
         FGetDirection(GLOBAL_DIRECTION_INDICATOR);
         GLOBAL_ACTION_INDICATOR = GLOBAL_DIRECTION_INDICATOR[0] / 64;
         if (GLOBAL_DIRECTION_INDICATOR[1] > 40) {
@@ -188,11 +192,7 @@ int main(void)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
-        if (GLOBAL_REFRESHING_FLAG){
-            OLED_Auto_Refresh();
-            GLOBAL_REFRESHING_FLAG = 0;
-            RENDERED_FLAG = 0;
-        }
+        HAL_IWDG_Refresh(&hiwdg);
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
     /* USER CODE END WHILE */
 

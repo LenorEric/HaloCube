@@ -4,10 +4,6 @@
 
 #include <FakeMPU6050.h>
 
-void MPU6050_init() {
-
-}
-
 extern ADC_HandleTypeDef hadc2;
 extern ADC_HandleTypeDef hadc3;
 

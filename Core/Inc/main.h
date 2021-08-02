@@ -37,7 +37,6 @@ extern "C" {
 #include "Renderers.h"
 #include "MPU6050.h"
 #include "GLOBAL_INCLUDE.h"
-#include "FakeMPU6050.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

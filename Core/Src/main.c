@@ -107,7 +107,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
                 RenderListPop();
             RENDERED_FLAG = 1;
         }
-        if (REFRESHING_FLAG){
+        if (REFRESHING_FLAG) {
             OLED_Auto_Refresh();
             REFRESHING_FLAG = 0;
             RENDERED_FLAG = 0;
@@ -115,12 +115,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         return;
     }
     if (htim->Instance == TIM11) {
-        FGetDirection(GLOBAL_DIRECTION_INDICATOR);
+        GetDirection(GLOBAL_DIRECTION_INDICATOR);
         GLOBAL_ACTION_INDICATOR = GLOBAL_DIRECTION_INDICATOR[0] / 64;
-        if (GLOBAL_DIRECTION_INDICATOR[1] > 40) {
+        if (GLOBAL_DIRECTION_INDICATOR[1] > 25) {
             GLOBAL_SELECT_FLAG = 1;
             RenderListPush(RENDER_selectingUI);
-        } else if (GLOBAL_DIRECTION_INDICATOR[1] < 30 && GLOBAL_SELECT_FLAG) {
+        } else if (GLOBAL_DIRECTION_INDICATOR[1] < 20 && GLOBAL_SELECT_FLAG) {
             GLOBAL_SELECT_FLAG = 0;
             PageAction(GLOBAL_ACTION_INDICATOR);
         }
@@ -181,9 +181,12 @@ int main(void)
     HAL_TIM_Base_Start_IT(&htim13);
 
     PageInit();
+    while (MPU6050_init());
+#ifdef MPU6050_DMP_ON
+    while (mpu_dmp_init()) while (MPU6050_init()) HAL_Delay(1000);
+#endif
 
     GLOBAL_INITED_FLAG = 1;
-
     HAL_TIM_Base_Start_IT(&htim11);
   /* USER CODE END 2 */
 
@@ -646,7 +649,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6|GPIO_PIN_7, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13|GPIO_PIN_8, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PA6 PA7 */
   GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
@@ -654,6 +657,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB8 */
   GPIO_InitStruct.Pin = GPIO_PIN_8;
@@ -675,7 +685,7 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+    /* User can add his own implementation to report the HAL error return state */
 
   /* USER CODE END Error_Handler_Debug */
 }

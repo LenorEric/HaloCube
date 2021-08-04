@@ -9,6 +9,7 @@
 #include "HaloCube_OLED.h"
 #include "string.h"
 #include "GLOBAL_INCLUDE.h"
+#include "def_time.h"
 
 uint8_t openScreenAnimation();
 uint8_t RENDER_mainPage();

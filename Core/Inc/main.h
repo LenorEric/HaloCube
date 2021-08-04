@@ -37,6 +37,7 @@ extern "C" {
 #include "Renderers.h"
 #include "MPU6050.h"
 #include "GLOBAL_INCLUDE.h"
+#include "ESP8266_WiFi.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

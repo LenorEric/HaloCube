@@ -22,22 +22,10 @@ typedef enum {
 #include "time.h"
 
 
-typedef struct {
-    uint16_t year;
-    uint8_t mon;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t min;
-    uint8_t sec;
-} GL_TM;
-
-extern GL_TM GLOBAL_TIME_INDICATOR;
 
 void ESP8266_WiFi_INIT();
 
 uint64_t getTimeStamp();
-
-void getTime(uint64_t Net_timeStamp);
 
 void ESP8266_UART_RxCpltCallBack(void);
 

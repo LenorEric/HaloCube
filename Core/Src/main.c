@@ -100,10 +100,11 @@ extern uint16_t GLOBAL_FRAME_INDICATOR;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM10){
-
+        goSec();
         return;
     }
     if (htim->Instance == TIM11) {
+        HAL_IWDG_Refresh(&hiwdg);
         GetDirection(GLOBAL_DIRECTION_INDICATOR);
         GLOBAL_ACTION_INDICATOR = GLOBAL_DIRECTION_INDICATOR[0] / 64;
         if (GLOBAL_DIRECTION_INDICATOR[1] > 25) {
@@ -201,6 +202,7 @@ int main(void)
 #endif
     HAL_IWDG_Refresh(&hiwdg);
     ESP8266_WiFi_INIT();
+    getTime(getTimeStamp());
     HAL_IWDG_Refresh(&hiwdg);
 
     GLOBAL_INITED_FLAG = 1;
@@ -213,8 +215,8 @@ int main(void)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
-        HAL_IWDG_Refresh(&hiwdg);
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
+        HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

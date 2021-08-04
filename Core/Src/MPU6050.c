@@ -108,17 +108,14 @@ void DirGetDirection(uint8_t *direction) {
     ///Transform reference system
     accX = -accX;
     accY = -accY;
-    printf("%d,%d,%d \r\n", accX, accY, accZ);
     if (abs(accX) > 18918 || abs(accY) > 18918 || abs(accZ) > 18918)
         return;
     if (accZ <= 0)
         return;
     g = sqrt(accX * accX + accY * accY + accZ * accZ);
     gsnb = sqrt(accX * accX + accY * accY);
-    printf("%d \r\n", g);
     direction[0] = accY>0?acos((double) accX / gsnb) * 40.5845f:255-acos((double) accX / gsnb) * 40.5845f;
     direction[1] = acos((double) accZ / g) * 180 / 3.14f;
-    printf("%d %d\r\n", direction[0], direction[1]);
 }
 
 inline void GetDirection(uint8_t *direction) {

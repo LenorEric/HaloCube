@@ -6,7 +6,6 @@
 
 extern UART_HandleTypeDef ESP8266_UART_PORT;
 
-GL_TM GLOBAL_TIME_INDICATOR;
 uint8_t ESP_UART_RX_BUF[ESP_UART_RX_BUF_SIZE];
 uint16_t ESP_UART_RX_STA;
 
@@ -128,12 +127,4 @@ uint64_t getTimeStamp() {
     return Net_timeStamp;
 }
 
-void getTime(uint64_t Net_timeStamp) {
-    Net_timeStamp >>= 32;
-    Net_timeStamp += 3600 * 8; /// Convert timezone
-    GLOBAL_TIME_INDICATOR.sec = Net_timeStamp%60;
-    GLOBAL_TIME_INDICATOR.min = Net_timeStamp/60 %60;
-    GLOBAL_TIME_INDICATOR.hour = Net_timeStamp/3600 % 24;
-    ///todo
-}
 

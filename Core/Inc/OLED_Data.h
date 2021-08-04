@@ -19,7 +19,10 @@ extern const uint8_t IMG_light[8][128];
 
 extern const uint8_t IMG_selecting[8][128];
 
-extern const uint8_t ICON12_Exit[18];
+extern const uint8_t ICON16_Exit[18];
+
+extern const uint8_t ICON16_Restart[32];
+extern const uint8_t ICON16_Blub[32];
 
 extern const uint8_t IMG_timeBackground[8][128];
 

@@ -13,6 +13,7 @@
 
 uint8_t openScreenAnimation();
 uint8_t RENDER_mainPage();
+uint8_t RENDER_bulbPage();
 uint8_t RENDER_selectingUI();
 
 #endif //HALOCUBE_DEV_RENDERERS_H

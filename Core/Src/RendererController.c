@@ -43,11 +43,30 @@ uint8_t pageNum = 0, currentPage = 0;
 void newPage() {
     PageList[pageNum].actionType = 0;
     for (int i = 0; i < 4; i++){
-        PageList[pageNum].actionPage[i] = 0;
-        PageList[pageNum].selectIcon[i] = ICON12_Exit;
+        PageList[pageNum].actionPage[i] = pageNum;
+        PageList[pageNum].selectIcon[i] = ICON16_Exit;
     }
+    PageList[pageNum].actionType |= 1 << 3;
+    PageList[pageNum].actionFunc[3] = PF_Restart;
+    PageList[pageNum].selectIcon[3] = ICON16_Restart;
+    PageList[pageNum].actionPage[0] = 1;
+    PageList[pageNum].selectIcon[0] = ICON16_Blub;
     PageList[pageNum].selfRender = RENDER_mainPage;
     pageNum++;
+
+    PageList[pageNum].actionType = 0;
+    for (int i = 0; i < 4; i++){
+        PageList[pageNum].actionPage[i] = 0;
+        PageList[pageNum].selectIcon[i] = ICON16_Exit;
+    }
+    PageList[pageNum].actionType |= 1 << 3;
+    PageList[pageNum].actionFunc[3] = PF_Restart;
+    PageList[pageNum].selectIcon[3] = ICON16_Restart;
+    PageList[pageNum].actionPage[0] = 0;
+    PageList[pageNum].selectIcon[0] = ICON16_Exit;
+    PageList[pageNum].selfRender = RENDER_bulbPage;
+    pageNum++;
+
     // todo
 }
 

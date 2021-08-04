@@ -8,6 +8,7 @@
 
 #include "OLED_Data.h"
 #include "Renderers.h"
+#include "PageFunction.h"
 #include "GLOBAL_INCLUDE.h"
 
 typedef uint8_t (*RenderFunc)(void);

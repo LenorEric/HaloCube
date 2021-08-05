@@ -39,6 +39,7 @@ typedef struct {
 
 void PageInit();
 void PageAction(uint8_t action);
+void GotoPage(uint8_t pageNumber);
 Page getPage();
 
 

@@ -3,7 +3,6 @@
 //
 
 #include "HaloCube_OLED.h"
-#include "stm32f4xx_hal.h"
 
 
 extern I2C_HandleTypeDef hi2c1;
@@ -89,7 +88,8 @@ uint16_t OLED_Auto_Refresh_Comp(uint8_t page, uint8_t col) {
 void OLED_Auto_Refresh(void) {
     if ((&hi2c1)->State != HAL_I2C_STATE_READY)
         return;
-    HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, 20);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, 1);
+    HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, 20000);
     uint8_t page = 0, col = 0;
     uint16_t Size = 0;
     while (page != 8) {

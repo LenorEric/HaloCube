@@ -1,4 +1,4 @@
-  //
+//
 // Created by Lenor on 2021/7/24.
 //
 
@@ -41,9 +41,9 @@ Page PageList[31];
 uint8_t pageNum = 0, currentPage = 0;
 
 void newPage() {
-    ///Main Page
+    ///Main Page 0
     PageList[pageNum].actionType = 0;
-    for (int i = 0; i < 4; i++){
+    for (int i = 0; i < 4; i++) {
         PageList[pageNum].actionPage[i] = pageNum;
         PageList[pageNum].selectIcon[i] = ICON16_Exit;
     }
@@ -51,22 +51,23 @@ void newPage() {
     PageList[pageNum].selectIcon[0] = ICON16_ShortCut;
     PageList[pageNum].selectIcon[1] = ICON16_Statistics;
     PageList[pageNum].selectIcon[2] = ICON16_Setting;
-    PageList[pageNum].selfRender = RENDER_mainPage;
+    PageList[pageNum].selfRender = RENDER_MainPage;
     pageNum++;
 
-    ///Short
-    PageList[pageNum].actionType = 0;
-    for (int i = 0; i < 4; i++){
-        PageList[pageNum].actionPage[i] = 0;
-        PageList[pageNum].selectIcon[i] = ICON16_Exit;
-    }
-    PageList[pageNum].actionType |= 1 << 3;
-    PageList[pageNum].actionFunc[3] = PF_Restart;
-    PageList[pageNum].selectIcon[3] = ICON16_Restart;
-    PageList[pageNum].actionPage[0] = 0;
+    ///ShortCut 1
+    PageList[pageNum].actionType = 0x07;
+    PageList[pageNum].actionFunc[0] = PF_AirConditioner;
     PageList[pageNum].selectIcon[0] = ICON16_Exit;
-    PageList[pageNum].selfRender = RENDER_bulbPage;
+    PageList[pageNum].actionFunc[1] = PF_PC;
+    PageList[pageNum].selectIcon[1] = ICON16_PC_ON;
+    PageList[pageNum].actionFunc[2] = PF_LightBulb;
+    PageList[pageNum].selectIcon[2] = ICON16_Bulb_ON;
+    PageList[pageNum].actionPage[3] = 0;
+    PageList[pageNum].selectIcon[3] = ICON16_Back;
+    PageList[pageNum].selfRender = RENDER_ShortCutPage;
     pageNum++;
+
+    ///
 
     // todo
 }
@@ -83,6 +84,12 @@ void PageAction(uint8_t action) {
         currentPage = PageList[currentPage].actionPage[action];
     }
     RenderListPush(PageList[currentPage].selfRender);
+}
+
+void GotoPage(uint8_t pageNumber){
+    currentPage = pageNumber;
+    RenderListPop();
+    RenderListPush(PageList[pageNumber].selfRender);
 }
 
 Page getPage() {

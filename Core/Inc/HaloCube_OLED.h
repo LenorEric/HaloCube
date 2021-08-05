@@ -7,6 +7,7 @@
 
 #include "OLED_Data.h"
 #include "GLOBAL_INCLUDE.h"
+#include "string.h"
 
 #define OLED_ADDRESS 0x78
 #define SetPosComp 3

@@ -8,6 +8,7 @@
 
 #include "OLED_Data.h"
 #include "Renderers.h"
+#include "PageFunction.h"
 #include "GLOBAL_INCLUDE.h"
 
 typedef uint8_t (*RenderFunc)(void);
@@ -38,6 +39,7 @@ typedef struct {
 
 void PageInit();
 void PageAction(uint8_t action);
+void GotoPage(uint8_t pageNumber);
 Page getPage();
 
 

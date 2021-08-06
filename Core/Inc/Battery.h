@@ -9,9 +9,9 @@
 #include "USART_REFACTOR.h"
 #include "math.h"
 
-#define VRef 3.3
+#define VRef 3.3f
 
-#define Battery_Stage (uint8_t)fmax(fmin((GLOBAL_BATTERY_INDICATOR*VRef*0.1699346-73.667), 13), 0)
+#define Battery_Stage (uint8_t)fmax(fmin((GLOBAL_BATTERY_INDICATOR*VRef*0.1699346f-73.667f), 13), 0)
 
 extern uint8_t GLOBAL_BATTERY_INDICATOR;
 

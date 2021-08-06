@@ -11,6 +11,11 @@
 
 #define OLED_ADDRESS 0x78
 #define SetPosComp 3
+#ifdef OLED_HOLO_DISPLAY
+#define DISPLAY_DIRECTION 0xC0
+#else
+#define DISPLAY_DIRECTION 0xC8
+#endif
 
 void OLED_I2C_Write_DMA(uint16_t MemAddress, uint8_t *pData, uint16_t Size);
 

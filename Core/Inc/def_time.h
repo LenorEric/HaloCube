@@ -9,6 +9,7 @@
 #include "GLOBAL_INCLUDE.h"
 #include "ESP8266_WiFi.h"
 #include "Battery.h"
+#include "HaloCube_OLED.h"
 
 typedef struct {
     uint16_t year;

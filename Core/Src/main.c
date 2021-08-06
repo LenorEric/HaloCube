@@ -207,7 +207,7 @@ int main(void)
     printf("MPU6050 INITED\r\n");
     ESP8266_WiFi_INIT();
     getTime(getTimeStamp());
-    printf("MPU6050 GT INITED\r\n");
+    printf("ESP8266 GT INITED\r\n");
     HCB_GetBattery();
     printf("Battery Updated\r\n");
     HAL_IWDG_Refresh(&hiwdg);

@@ -22,6 +22,7 @@ void goSec() {
         GLOBAL_TIME_INDICATOR.min++;
         /// Each min
         HCB_GetBattery();
+        OLED_Refresh();
         if (GLOBAL_TIME_INDICATOR.min == 60) {
             GLOBAL_TIME_INDICATOR.min = 0;
             GLOBAL_TIME_INDICATOR.hour++;

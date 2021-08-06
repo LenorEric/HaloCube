@@ -40,6 +40,7 @@ extern "C" {
 #include "ESP8266_WiFi.h"
 #include "def_time.h"
 #include "PageFunction.h"
+#include "Battery.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

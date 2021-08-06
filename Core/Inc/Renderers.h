@@ -12,6 +12,7 @@
 #include "PageFunction.h"
 #include "def_time.h"
 #include "OLED_Data.h"
+#include "Battery.h"
 
 uint8_t openScreenAnimation();
 uint8_t RENDER_MainPage();

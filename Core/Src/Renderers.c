@@ -33,6 +33,7 @@ uint8_t openScreenAnimation() {
 uint8_t RENDER_MainPage() {
     if (GLOBAL_SELECT_FLAG)
         return 1;
+    uint8_t BTST = Battery_Stage;
     memcpy(OLEDTemp, IMG_timeBackground, 1024);
     const uint8_t StartPoint[4] = {16, 37, 73, 94};
     uint8_t char2print[4] = {GLOBAL_TIME_INDICATOR.hour / 10 + 26, GLOBAL_TIME_INDICATOR.hour % 10 + 26,
@@ -50,6 +51,14 @@ uint8_t RENDER_MainPage() {
             }
         }
     }
+    OLEDTemp[0][107] = 0x18;
+    OLEDTemp[0][108] = 0x18;
+    OLEDTemp[0][109] = 0xff;
+    OLEDTemp[0][110] = 0x81;
+    for (uint8_t i = 111; i < 124; i++)
+        OLEDTemp[0][i] = BTST > i - 111?0xBD:0x81;
+    OLEDTemp[0][124] = 0x81;
+    OLEDTemp[0][125] = 0xff;
     HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, 2000);
     HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t) OLEDTemp,
                   (uint32_t) OLEDBuffer, 1024);
@@ -91,7 +100,7 @@ uint8_t RENDER_TestPage() {
         return 1;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
     for (uint16_t i = 0; i < GLOBAL_FRAME_INDICATOR; i++) {
-        SET_HIGH(i % 128, i/128);
+        SET_HIGH(i % 128, i / 128);
     }
     HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, 2000);
     HAL_DMA_Start(&hdma_memtomem_dma2_stream0, (uint32_t) OLEDTemp[0], (uint32_t) OLEDBuffer, 1024);

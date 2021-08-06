@@ -20,9 +20,12 @@ void goSec() {
     if (GLOBAL_TIME_INDICATOR.sec == 60) {
         GLOBAL_TIME_INDICATOR.sec = 0;
         GLOBAL_TIME_INDICATOR.min++;
+        /// Each min
+        HCB_GetBattery();
         if (GLOBAL_TIME_INDICATOR.min == 60) {
             GLOBAL_TIME_INDICATOR.min = 0;
             GLOBAL_TIME_INDICATOR.hour++;
+            /// Each Hour
             getTime(getTimeStamp());
             if (GLOBAL_TIME_INDICATOR.hour == 24) {
                 GLOBAL_TIME_INDICATOR.hour = 0;

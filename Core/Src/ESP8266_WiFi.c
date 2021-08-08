@@ -7,7 +7,7 @@
 extern UART_HandleTypeDef ESP8266_UART_PORT;
 
 uint8_t ESP_UART_RX_BUF[ESP_UART_RX_BUF_SIZE];
-uint16_t ESP_UART_RX_STA;
+uint16_t ESP_UART_RX_STA = 0;
 
 void ESP8266_UART_RxCpltCallBack(void) {
 }
@@ -86,7 +86,7 @@ void ESP8266_WiFi_INIT() {
     ESP8266_TR_CMD(quit_ap, receive_cmd);
 #endif
     const char list_ap[] = "AT+CWJAP?\r\n";
-    const char connect_ap[] = "AT+CWJAP=\"Lenoro\",\"ForAzeroth\"\r\n";
+    const char connect_ap[] = "AT+CWJAP=\"Lenora\",\"ForAzeroth\"\r\n";
     ESP8266_TR_CMD(list_ap, receive_cmd);
     if (!(strcmp("No AP", receive_cmd[0]))) {
         ESP8266_TR_CMD(connect_ap, receive_cmd);
@@ -94,8 +94,14 @@ void ESP8266_WiFi_INIT() {
 }
 
 uint64_t getTimeStamp() {
-    uint64_t Net_timeStamp = 0;
     char receive_cmd[20][ESP_UART_RX_CMD_SIZE];
+    const char list_ap[] = "AT+CWJAP?\r\n";
+    const char connect_ap[] = "AT+CWJAP=\"Lenora\",\"ForAzeroth\"\r\n";
+    ESP8266_TR_CMD(list_ap, receive_cmd);
+    if (!(strcmp("No AP", receive_cmd[0]))) {
+        ESP8266_TR_CMD(connect_ap, receive_cmd);
+    }
+    uint64_t Net_timeStamp = 0;
     const char connect_NTP[] = "AT+CIPSTART=\"UDP\",\"time.windows.com\",123\r\n";
     const char CIPMODE[] = "AT+CIPMODE=0\r\n";
     const char CIPSEND[] = "AT+CIPSEND=48\r\n";
@@ -105,7 +111,7 @@ uint64_t getTimeStamp() {
                                  0xd9, 0x00, 0x00, 0x00, 0x00, 0x00};
     const char CIPCLOSE[] = "AT+CIPCLOSE\r\n";
     HAL_UART_Transmit(&ESP8266_UART_PORT, CIPCLOSE, sizeof(CIPCLOSE), 100);
-    while (1){
+    while (1) {
         if (ESP8266_TR_CMD(connect_NTP, receive_cmd))
             continue;
         if (ESP8266_TR_CMD(CIPMODE, receive_cmd))
@@ -119,7 +125,7 @@ uint64_t getTimeStamp() {
     ESP_UART_RX_STA = 0;
     while (!(ESP_UART_RX_STA & 0x8000));
     ESP_UART_RX_STA = 0;
-    for (uint8_t i = 50;i<58;i++){
+    for (uint8_t i = 50; i < 58; i++) {
         Net_timeStamp <<= 8;
         Net_timeStamp |= ESP_UART_RX_BUF[i];
     }

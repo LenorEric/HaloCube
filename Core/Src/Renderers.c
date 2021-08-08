@@ -77,8 +77,8 @@ uint8_t RENDER_ShortCutPage() {
     if (GLOBAL_SELECT_FLAG)
         return 1;
     uint8_t bit;
-    icons[1] = PC_ON ? ICON16_PC_ON : ICON16_PC_OFF;
-    icons[2] = Bulb_ON ? ICON16_Bulb_ON : ICON16_Blub_OFF;
+    icons[1] = GLOBAL_PC_ON_FLAG ? ICON16_PC_ON : ICON16_PC_OFF;
+    icons[2] = GLOBAL_Bulb_ON_FLAG ? ICON16_Bulb_ON : ICON16_Blub_OFF;
     icons[3] = ICON16_Back;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
     for (uint8_t i = 1; i < 4; i++) {

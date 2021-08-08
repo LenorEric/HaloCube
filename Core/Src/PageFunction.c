@@ -15,30 +15,35 @@ void PF_AirConditioner() {
 
 }
 
-uint8_t PC_ON = 0;
+uint8_t GLOBAL_PC_ON_FLAG = 0;
 
 void PF_PC() {
-    if (PC_ON){
+    if (GLOBAL_PC_ON_FLAG){
         PageList[1].selectIcon[1] = ICON16_PC_ON;
-        PC_ON = 0;
+        GLOBAL_PC_ON_FLAG = 0;
     }
     else{
         PageList[1].selectIcon[1] = ICON16_PC_OFF;
-        PC_ON = 1;
+        GLOBAL_PC_ON_FLAG = 1;
     }
     GotoPage(0);
 }
 
-uint8_t Bulb_ON = 0;
+uint8_t GLOBAL_Bulb_ON_FLAG = 0;
 
 void PF_LightBulb() {
-    if (Bulb_ON){
+    char receive_cmd[20][nRF_UART_RX_CMD_SIZE];
+    if (GLOBAL_Bulb_ON_FLAG){
         PageList[1].selectIcon[2] = ICON16_Bulb_ON;
-        Bulb_ON = 0;
+        GLOBAL_Bulb_ON_FLAG = 0;
+        const char BulbOff[] = "HC+BulbOff";
+        nRF24L01_TR_CMD(BulbOff, receive_cmd);
     }
     else{
         PageList[1].selectIcon[2] = ICON16_Blub_OFF;
-        Bulb_ON = 1;
+        GLOBAL_Bulb_ON_FLAG = 1;
+        const char BulbOff[] = "HC+BulbOn";
+        nRF24L01_TR_CMD(BulbOff, receive_cmd);
     }
     GotoPage(0);
 }

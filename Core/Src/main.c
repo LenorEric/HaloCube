@@ -183,35 +183,44 @@ int main(void)
   /* USER CODE BEGIN 2 */
     HAL_Delay(100);
 
+    ///INIT OLED
     OLED_Init();
     OLED_Clear();
     OLED_Refresh();
     printf("OLED INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
-
+    ///INIT RenderController
     RenderListInit();
     RenderListPush(openScreenAnimation);
     RenderListPush(RENDER_MainPage);
     printf("RenderCon INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
-
+    ///Pre-Init finished, begin loading page rendering
     HAL_TIM_Base_Start_IT(&htim14);
     HAL_TIM_Base_Start_IT(&htim13);
-
+    ///Add Page
     PageInit();
+    HAL_IWDG_Refresh(&hiwdg);
+    ///Init MPU6050
     while (MPU6050_init());
 #ifdef MPU6050_DMP_ON
     while (mpu_dmp_init()) while (MPU6050_init()) HAL_Delay(1000);
 #endif
     HAL_IWDG_Refresh(&hiwdg);
     printf("MPU6050 INITED\r\n");
-    ESP8266_WiFi_INIT();
-    getTime(getTimeStamp());
-    printf("ESP8266 GT INITED\r\n");
+    ///Get Battery Status
     HCB_GetBattery();
     printf("Battery Updated\r\n");
     HAL_IWDG_Refresh(&hiwdg);
-
+    ///Init nRF24L01
+    nRF24L01_INIT();
+    printf("nRF24L01 INITED\r\n");
+    HAL_IWDG_Refresh(&hiwdg);
+    ///Init ESP8266 and get time
+    ESP8266_WiFi_INIT();
+    getTime(getTimeStamp());
+    printf("ESP8266 GT INITED\r\n");
+    ///Init finished
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);
     HAL_TIM_Base_Start_IT(&htim10);
@@ -252,7 +261,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 64;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -261,12 +275,12 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV4;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -436,7 +450,7 @@ static void MX_TIM10_Init(void)
   htim10.Instance = TIM10;
   htim10.Init.Prescaler = 3199;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 2499;
+  htim10.Init.Period = 4999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
@@ -467,7 +481,7 @@ static void MX_TIM11_Init(void)
   htim11.Instance = TIM11;
   htim11.Init.Prescaler = 3199;
   htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim11.Init.Period = 249;
+  htim11.Init.Period = 499;
   htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim11.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim11) != HAL_OK)
@@ -498,7 +512,7 @@ static void MX_TIM13_Init(void)
   htim13.Instance = TIM13;
   htim13.Init.Prescaler = 3199;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim13.Init.Period = 4;
+  htim13.Init.Period = 7;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim13.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim13) != HAL_OK)
@@ -529,7 +543,7 @@ static void MX_TIM14_Init(void)
   htim14.Instance = TIM14;
   htim14.Init.Prescaler = 199;
   htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim14.Init.Period = 999;
+  htim14.Init.Period = 1999;
   htim14.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim14.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim14) != HAL_OK)

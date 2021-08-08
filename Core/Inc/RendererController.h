@@ -23,6 +23,7 @@ void RenderListInit();
 void RenderListPush(RenderFunc);
 
 void RenderListPop();
+uint8_t PLNotEmpty();
 
 RenderFunc RenderListGet();
 

@@ -41,6 +41,7 @@ extern "C" {
 #include "def_time.h"
 #include "PageFunction.h"
 #include "Battery.h"
+#include "nRF24L01.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -15,6 +15,10 @@ void RenderListInit() {
     GLOBAL_FRAME_INDICATOR = 0;
 }
 
+uint8_t PLNotEmpty(){
+    return RList.right - RList.left;
+}
+
 void RenderListPush(RenderFunc func) {
     RList.RenderSequence[RList.right++] = func;
     RList.right %= 31;
@@ -88,7 +92,8 @@ void PageAction(uint8_t action) {
 
 void GotoPage(uint8_t pageNumber){
     currentPage = pageNumber;
-    RenderListPop();
+    while (PLNotEmpty())
+        RenderListPop();
     RenderListPush(PageList[pageNumber].selfRender);
 }
 

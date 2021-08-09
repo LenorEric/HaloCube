@@ -15,7 +15,7 @@ void RenderListInit() {
     GLOBAL_FRAME_INDICATOR = 0;
 }
 
-uint8_t PLNotEmpty(){
+uint8_t PLNotEmpty() {
     return RList.right - RList.left;
 }
 
@@ -48,29 +48,42 @@ void newPage() {
     ///Main Page 0
     for (int i = 0; i < 4; i++) {
         PageList[pageNum].actionFunc[i] = PF_GotoPage0;
-        PageList[pageNum].selectIcon[i] = ICON16_Exit;
+        PageList[pageNum].selectIcon[i] = ICON16_Back;
     }
     PageList[pageNum].actionFunc[0] = PF_GotoPage1;
     PageList[pageNum].selectIcon[0] = ICON16_ShortCut;
+    PageList[pageNum].actionFunc[1] = PF_GotoPage2;
     PageList[pageNum].selectIcon[1] = ICON16_Statistics;
+    PageList[pageNum].actionFunc[2] = PF_GotoPage0;
     PageList[pageNum].selectIcon[2] = ICON16_Setting;
+    PageList[pageNum].actionFunc[3] = PF_GotoPage0;
+    PageList[pageNum].selectIcon[3] = ICON16_Back;
     PageList[pageNum].selfRender = RENDER_MainPage;
     pageNum++;
 
     ///ShortCut 1
     PageList[pageNum].actionFunc[0] = PF_AirConditioner;
-    PageList[pageNum].selectIcon[0] = ICON16_Exit;
+    PageList[pageNum].selectIcon[0] = ICON16_Back;
     PageList[pageNum].actionFunc[1] = PF_PC;
     PageList[pageNum].selectIcon[1] = ICON16_PC_ON;
     PageList[pageNum].actionFunc[2] = PF_LightBulb;
     PageList[pageNum].selectIcon[2] = ICON16_Bulb_ON;
     PageList[pageNum].actionFunc[3] = PF_GotoPage0;
-    PageList[pageNum].selectIcon[3] = ICON16_Back;
+    PageList[pageNum].selectIcon[3] = ICON16_Return;
     PageList[pageNum].selfRender = RENDER_ShortCutPage;
     pageNum++;
 
     ///Statistics 2
-
+    PageList[pageNum].actionFunc[0] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[0] = ICON16_Back;
+    PageList[pageNum].actionFunc[1] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[1] = ICON16_Back;
+    PageList[pageNum].actionFunc[2] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[2] = ICON16_Back;
+    PageList[pageNum].actionFunc[3] = PF_GotoPage0;
+    PageList[pageNum].selectIcon[3] = ICON16_Return;
+    PageList[pageNum].selfRender = RENDER_StatisticPage;
+    pageNum++;
     // todo: Add more pages
 }
 
@@ -83,7 +96,7 @@ void PageAction(uint8_t action) {
     PageList[currentPage].actionFunc[action]();
 }
 
-void GotoPage(uint8_t pageNumber){
+void GotoPage(uint8_t pageNumber) {
     currentPage = pageNumber;
     while (PLNotEmpty())
         RenderListPop();

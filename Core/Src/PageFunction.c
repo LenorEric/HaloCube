@@ -12,7 +12,7 @@ void PF_Restart() {
 }
 
 void PF_AirConditioner() {
-
+    PF_GotoPage0();
 }
 
 uint8_t GLOBAL_PC_ON_FLAG = 0;

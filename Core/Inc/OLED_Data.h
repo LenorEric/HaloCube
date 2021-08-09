@@ -11,7 +11,7 @@ extern const uint64_t OLED_letter[];
 
 extern const uint8_t HaloCubeAnimation[50][8][128];
 
-extern const uint8_t IMG_timePresent[8][128];
+extern const uint8_t IMG_timeDemo[8][128];
 
 extern const uint8_t IMG_dark[8][128];
 
@@ -19,13 +19,13 @@ extern const uint8_t IMG_light[8][128];
 
 extern const uint8_t IMG_selecting[8][128];
 
-extern const uint8_t ICON16_Exit[18];
+extern const uint8_t ICON16_Back[18];
 
 extern const uint8_t ICON16_Restart[32];
 extern const uint8_t ICON16_Setting[32];
 extern const uint8_t ICON16_Statistics[32];
 extern const uint8_t ICON16_Blub[32];
-extern const uint8_t ICON16_Back[32];
+extern const uint8_t ICON16_Return[32];
 extern const uint8_t ICON16_ShortCut[32];
 extern const uint8_t ICON16_PC_OFF[32];
 extern const uint8_t ICON16_PC_ON[32];

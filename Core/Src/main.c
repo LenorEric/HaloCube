@@ -105,6 +105,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         return;
     }
     if (htim->Instance == TIM11) {
+        HAL_IWDG_Refresh(&hiwdg);
         GetDirection(GLOBAL_DIRECTION_INDICATOR);
         GLOBAL_ACTION_INDICATOR = GLOBAL_DIRECTION_INDICATOR[0] / 64;
         if (GLOBAL_DIRECTION_INDICATOR[1] > 25) {
@@ -117,8 +118,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         return;
     }
     if (htim->Instance == TIM13) {
-        if (GLOBAL_INITED_FLAG)
-            HAL_IWDG_Refresh(&hiwdg);
         if (!RENDERED_FLAG && !REFRESHING_FLAG) {
             if (RenderListGet()())
                 RenderListPop();
@@ -219,6 +218,10 @@ int main(void)
     ///Init nRF24L01
     nRF24L01_INIT();
     printf("nRF24L01 INITED\r\n");
+    HAL_IWDG_Refresh(&hiwdg);
+    ///Init Power Calculator(Sync device status)
+    PowerInit();
+    printf("PowerCalc INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init ESP8266 and get time
     ESP8266_WiFi_INIT();

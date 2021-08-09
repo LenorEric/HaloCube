@@ -34,7 +34,7 @@ GETCHAR_PROTOTYPE {
 
 #ifdef REFACTOR_UART_IRQ
 uint8_t UART_RX_BUF[UART_RX_BUF_SIZE];
-uint16_t UART_RX_STA;
+volatile uint16_t UART_RX_STA;
 
 __weak void UART_RxCpltCallBack(void){
 }

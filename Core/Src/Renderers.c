@@ -11,6 +11,7 @@ extern uint8_t OLEDBuffer[8][128];
 extern uint8_t GLOBAL_PAGE_INDICATOR;
 extern uint8_t GLOBAL_SELECT_FLAG;
 extern uint8_t GLOBAL_INITED_FLAG;
+extern Page PageList[31];
 
 ///In case of Refreshing bug
 uint8_t OLEDTemp[8][128];
@@ -67,6 +68,11 @@ uint8_t RENDER_MainPage() {
 
 ///ShortCut
 uint8_t RENDER_ShortCutPage() {
+    static uint8_t INITED_FLAG = 0;
+    if (!INITED_FLAG){
+        INITED_FLAG = 1;
+        PageList[1].selectIcon[2] = GetBulbStatus()?ICON16_Blub_OFF:ICON16_Bulb_ON;
+    }
     const uint8_t *icons[4];
     const uint8_t StartPoint[4][2] = {
             {96, 7},
@@ -78,7 +84,7 @@ uint8_t RENDER_ShortCutPage() {
         return 1;
     uint8_t bit;
     icons[1] = GLOBAL_PC_ON_FLAG ? ICON16_PC_ON : ICON16_PC_OFF;
-    icons[2] = GLOBAL_Bulb_ON_FLAG ? ICON16_Bulb_ON : ICON16_Blub_OFF;
+    icons[2] = ReturnBulbStatus() ? ICON16_Bulb_ON : ICON16_Blub_OFF;
     icons[3] = ICON16_Back;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
     for (uint8_t i = 1; i < 4; i++) {

@@ -73,7 +73,7 @@ void newPage() {
 
     ///
 
-    // todo
+    // todo: Add more pages
 }
 
 void PageInit() {
@@ -81,7 +81,7 @@ void PageInit() {
 }
 
 void PageAction(uint8_t action) {
-    /*todo*/
+    /// todo: More action types
     if (PageList[currentPage].actionType >> action & 1) {
         PageList[currentPage].actionFunc[action]();
     } else {

@@ -29,21 +29,14 @@ void PF_PC() {
     GotoPage(0);
 }
 
-uint8_t GLOBAL_Bulb_ON_FLAG = 0;
-
 void PF_LightBulb() {
-    char receive_cmd[20][nRF_UART_RX_CMD_SIZE];
-    if (GLOBAL_Bulb_ON_FLAG){
+    if (ReturnBulbStatus()){
         PageList[1].selectIcon[2] = ICON16_Bulb_ON;
-        GLOBAL_Bulb_ON_FLAG = 0;
-        const char BulbOff[] = "HC+BulbOff";
-        nRF24L01_TR_CMD(BulbOff, receive_cmd);
+        TurnOffBulb();
     }
     else{
         PageList[1].selectIcon[2] = ICON16_Blub_OFF;
-        GLOBAL_Bulb_ON_FLAG = 1;
-        const char BulbOff[] = "HC+BulbOn";
-        nRF24L01_TR_CMD(BulbOff, receive_cmd);
+        TurnOnBulb();
     }
     GotoPage(0);
 }

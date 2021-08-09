@@ -105,7 +105,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         return;
     }
     if (htim->Instance == TIM11) {
-        HAL_IWDG_Refresh(&hiwdg);
         GetDirection(GLOBAL_DIRECTION_INDICATOR);
         GLOBAL_ACTION_INDICATOR = GLOBAL_DIRECTION_INDICATOR[0] / 64;
         if (GLOBAL_DIRECTION_INDICATOR[1] > 25) {
@@ -118,6 +117,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         return;
     }
     if (htim->Instance == TIM13) {
+        if (GLOBAL_INITED_FLAG)
+            HAL_IWDG_Refresh(&hiwdg);
         if (!RENDERED_FLAG && !REFRESHING_FLAG) {
             if (RenderListGet()())
                 RenderListPop();
@@ -132,6 +133,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     }
     if (htim->Instance == TIM14) {
         GLOBAL_FRAME_INDICATOR++;
+        if (GLOBAL_FRAME_INDICATOR == 65535){
+            GLOBAL_FRAME_INDICATOR = 65535;
+        }
         if (RENDERED_FLAG) {
             REFRESHING_FLAG = 1;
         }
@@ -218,8 +222,9 @@ int main(void)
     HAL_IWDG_Refresh(&hiwdg);
     ///Init ESP8266 and get time
     ESP8266_WiFi_INIT();
+    printf("ESP8266 INITED\r\n");
     getTime(getTimeStamp());
-    printf("ESP8266 GT INITED\r\n");
+    printf("SysTime INITED\r\n");
     ///Init finished
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);

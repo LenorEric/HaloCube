@@ -12,11 +12,13 @@ void getTime(uint64_t Net_timeStamp) {
     GLOBAL_TIME_INDICATOR.sec = Net_timeStamp % 60;
     GLOBAL_TIME_INDICATOR.min = Net_timeStamp / 60 % 60;
     GLOBAL_TIME_INDICATOR.hour = Net_timeStamp / 3600 % 24;
-    ///todo
+    /// todo: Date calc
 }
 
 void goSec() {
     GLOBAL_TIME_INDICATOR.sec++;
+    /// Each sec
+    goPowerSec();
     if (GLOBAL_TIME_INDICATOR.sec == 60) {
         GLOBAL_TIME_INDICATOR.sec = 0;
         GLOBAL_TIME_INDICATOR.min++;
@@ -26,11 +28,11 @@ void goSec() {
         if (GLOBAL_TIME_INDICATOR.min == 60) {
             GLOBAL_TIME_INDICATOR.min = 0;
             GLOBAL_TIME_INDICATOR.hour++;
-            /// Each Hour
+            /// Each hour
             getTime(getTimeStamp());
             if (GLOBAL_TIME_INDICATOR.hour == 24) {
                 GLOBAL_TIME_INDICATOR.hour = 0;
-                /// todo
+                /// todo: Date calc
             }
         }
     }

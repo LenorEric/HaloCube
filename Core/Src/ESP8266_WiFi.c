@@ -7,7 +7,7 @@
 extern UART_HandleTypeDef ESP8266_UART_PORT;
 
 uint8_t ESP_UART_RX_BUF[ESP_UART_RX_BUF_SIZE];
-uint16_t ESP_UART_RX_STA = 0;
+volatile uint16_t ESP_UART_RX_STA = 0;
 
 void ESP8266_UART_RxCpltCallBack(void) {
 }
@@ -86,7 +86,7 @@ void ESP8266_WiFi_INIT() {
     ESP8266_TR_CMD(quit_ap, receive_cmd);
 #endif
     const char list_ap[] = "AT+CWJAP?\r\n";
-    const char connect_ap[] = "AT+CWJAP=\"Lenora\",\"ForAzeroth\"\r\n";
+    const char connect_ap[] = "AT+CWJAP=\"Lenoro\",\"ForAzeroth\"\r\n";
     ESP8266_TR_CMD(list_ap, receive_cmd);
     if (!(strcmp("No AP", receive_cmd[0]))) {
         ESP8266_TR_CMD(connect_ap, receive_cmd);

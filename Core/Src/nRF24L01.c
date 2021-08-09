@@ -7,7 +7,7 @@
 extern UART_HandleTypeDef nRF24L01_UART_PORT;
 
 uint8_t nRF_UART_RX_BUF[nRF_UART_RX_BUF_SIZE];
-uint16_t nRF_UART_RX_STA = 0;
+volatile uint16_t nRF_UART_RX_STA = 0;
 
 void nRF24L01_IRQ_HANDLER(void) {
     if (__HAL_UART_GET_FLAG(&nRF24L01_UART_PORT, UART_FLAG_IDLE) != RESET)  // 空闲中断标记被置位
@@ -72,10 +72,12 @@ nRF24L01_STATE nRF_Receive_CMD(char receive_cmd[][nRF_UART_RX_CMD_SIZE]) {
 }
 
 nRF24L01_STATE nRF24L01_TR_CMD(char cmd2send[], char **receive_cmd) {
+    nRF_UART_RX_STA = 0;
     HAL_UART_Transmit(&nRF24L01_UART_PORT, cmd2send, strlen(cmd2send)+1, 100);
     uint8_t try = 230;
     nRF24L01_STATE state = nRF_Receive_CMD(receive_cmd);
     while (state && ++try) {
+        nRF_UART_RX_STA = 0;
         HAL_UART_Transmit(&nRF24L01_UART_PORT, cmd2send, strlen(cmd2send)+1, 100);
         state = nRF_Receive_CMD(receive_cmd);
     }
@@ -87,7 +89,8 @@ void nRF24L01_INIT() {
     HAL_UART_Receive_DMA(&nRF24L01_UART_PORT, nRF_UART_RX_BUF, nRF_UART_RX_BUF_SIZE);
     __HAL_UART_ENABLE_IT(&nRF24L01_UART_PORT, UART_IT_IDLE);
     const char test_for[] = "AT?\0";
-    nRF24L01_TR_CMD(test_for, receive_cmd);
+    while (nRF24L01_TR_CMD(test_for, receive_cmd));
+    HAL_UART_Transmit(&nRF24L01_UART_PORT, "nRF Test", 9, 100);
 }
 
 void nRF24L01_UART_RxCpltCallBack(void) {

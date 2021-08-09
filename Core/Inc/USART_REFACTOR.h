@@ -14,8 +14,8 @@
 
 #ifdef REFACTOR_UART_IRQ
 #define UART_RX_BUF_SIZE 1024
-extern uint8_t UART_RX_BUF[UART_RX_BUF_SIZE];
-extern uint16_t UART_RX_STA;
+//extern uint8_t UART_RX_BUF[UART_RX_BUF_SIZE];
+//extern volatile uint16_t UART_RX_STA;
 
 void REFACTORED_UART_DMA_INIT();
 

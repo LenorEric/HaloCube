@@ -13,6 +13,9 @@ void PF_Restart();
 void PF_AirConditioner();
 void PF_PC();
 void PF_LightBulb();
+void PF_GotoPage0();
+void PF_GotoPage1();
+void PF_GotoPage2();
 
 extern uint8_t GLOBAL_PC_ON_FLAG;
 

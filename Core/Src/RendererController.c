@@ -46,12 +46,11 @@ uint8_t pageNum = 0, currentPage = 0;
 
 void newPage() {
     ///Main Page 0
-    PageList[pageNum].actionType = 0;
     for (int i = 0; i < 4; i++) {
-        PageList[pageNum].actionPage[i] = pageNum;
+        PageList[pageNum].actionFunc[i] = PF_GotoPage0;
         PageList[pageNum].selectIcon[i] = ICON16_Exit;
     }
-    PageList[pageNum].actionPage[0] = 1;
+    PageList[pageNum].actionFunc[0] = PF_GotoPage1;
     PageList[pageNum].selectIcon[0] = ICON16_ShortCut;
     PageList[pageNum].selectIcon[1] = ICON16_Statistics;
     PageList[pageNum].selectIcon[2] = ICON16_Setting;
@@ -59,19 +58,18 @@ void newPage() {
     pageNum++;
 
     ///ShortCut 1
-    PageList[pageNum].actionType = 0x07;
     PageList[pageNum].actionFunc[0] = PF_AirConditioner;
     PageList[pageNum].selectIcon[0] = ICON16_Exit;
     PageList[pageNum].actionFunc[1] = PF_PC;
     PageList[pageNum].selectIcon[1] = ICON16_PC_ON;
     PageList[pageNum].actionFunc[2] = PF_LightBulb;
     PageList[pageNum].selectIcon[2] = ICON16_Bulb_ON;
-    PageList[pageNum].actionPage[3] = 0;
+    PageList[pageNum].actionFunc[3] = PF_GotoPage0;
     PageList[pageNum].selectIcon[3] = ICON16_Back;
     PageList[pageNum].selfRender = RENDER_ShortCutPage;
     pageNum++;
 
-    ///
+    ///Statistics 2
 
     // todo: Add more pages
 }
@@ -82,12 +80,7 @@ void PageInit() {
 
 void PageAction(uint8_t action) {
     /// todo: More action types
-    if (PageList[currentPage].actionType >> action & 1) {
-        PageList[currentPage].actionFunc[action]();
-    } else {
-        currentPage = PageList[currentPage].actionPage[action];
-    }
-    RenderListPush(PageList[currentPage].selfRender);
+    PageList[currentPage].actionFunc[action]();
 }
 
 void GotoPage(uint8_t pageNumber){

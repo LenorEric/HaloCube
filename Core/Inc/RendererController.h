@@ -31,9 +31,7 @@ RenderFunc RenderListGet();
 typedef void (*PageFunc)(void);
 
 typedef struct {
-    uint8_t actionType; // 1 for function, 0 for page
     PageFunc actionFunc[4];
-    uint8_t actionPage[4];
     uint8_t *selectIcon[4];
     RenderFunc selfRender;
 } Page;

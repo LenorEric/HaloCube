@@ -36,10 +36,12 @@ uint8_t GetBulbStatus() {
         THROW_ERROR;
     if (receive_cmd[0][0]){
         Bulb_ON_FLAG = 1;
+        Power_BulbSetStatus(1);
         return 1;
     }
     else{
         Bulb_ON_FLAG = 0;
+        Power_BulbSetStatus(0);
         return 0;
     }
 }

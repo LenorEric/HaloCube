@@ -40,3 +40,15 @@ void PF_LightBulb() {
     }
     GotoPage(0);
 }
+
+void PF_GotoPage0(){
+    GotoPage(0);
+}
+
+void PF_GotoPage1() {
+    GotoPage(1);
+}
+
+void PF_GotoPage2() {
+    GotoPage(2);
+}

@@ -1,3 +1,4 @@
+#include <limits.h>
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -89,13 +90,15 @@ void NMI_Handler(void)
   /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
-/**
+_Noreturn /**
   * @brief This function handles Hard fault interrupt.
   */
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+    printf("Hardware Fault\r\n");
+    __set_FAULTMASK(1);
+    HAL_NVIC_SystemReset();
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {

@@ -15,16 +15,14 @@ void PF_AirConditioner() {
     PF_GotoPage0();
 }
 
-uint8_t GLOBAL_PC_ON_FLAG = 0;
-
 void PF_PC() {
-    if (GLOBAL_PC_ON_FLAG){
+    if (ReturnPCStatus()){
         PageList[1].selectIcon[1] = ICON16_PC_ON;
-        GLOBAL_PC_ON_FLAG = 0;
+        TurnOffPC();
     }
     else{
         PageList[1].selectIcon[1] = ICON16_PC_OFF;
-        GLOBAL_PC_ON_FLAG = 1;
+        TurnOnPC();
     }
     GotoPage(0);
 }

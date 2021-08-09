@@ -74,10 +74,10 @@ uint8_t PrintString(char *s2p, uint8_t xpos, uint8_t ypos) {
     return x;
 }
 
-void DrawRect(uint8_t sx, uint8_t sy, uint8_t ex, uint8_t ey){
-    for (uint8_t x=sx;x<ex;x++)
-        for (uint8_t y=sy;y<ey;y++)
-            SET_HIGH(x,y);
+void DrawRect(uint8_t sx, uint8_t sy, uint8_t ex, uint8_t ey) {
+    for (uint8_t x = sx; x < ex; x++)
+        for (uint8_t y = sy; y < ey; y++)
+            SET_HIGH(x, y);
 }
 
 uint8_t openScreenAnimation() {
@@ -143,7 +143,7 @@ uint8_t RENDER_ShortCutPage() {
     if (GLOBAL_SELECT_FLAG)
         return 1;
     uint8_t bit;
-    icons[1] = GLOBAL_PC_ON_FLAG ? ICON16_PC_ON : ICON16_PC_OFF;
+    icons[1] = ReturnPCStatus() ? ICON16_PC_ON : ICON16_PC_OFF;
     icons[2] = ReturnBulbStatus() ? ICON16_Bulb_ON : ICON16_Blub_OFF;
     icons[3] = ICON16_Return;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
@@ -207,10 +207,10 @@ uint8_t RENDER_SelectingUI() {
     return 0;
 }
 
-
 uint8_t RENDER_StatisticPage() {
     if (GLOBAL_SELECT_FLAG)
         return 1;
+    uint8_t i = 0, j = 0;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
     const char CR[] = "consumption ranking";
     PrintString(CR, 0, 0);
@@ -220,7 +220,7 @@ uint8_t RENDER_StatisticPage() {
     memset(rankNames, 0, sizeof(rankNames));
     memset(rankConsump, 0, sizeof(rankConsump));
     Power_GiveTopThreeConsumption(rankNames, rankConsump);
-    for (uint8_t i = 0; i < 3; i++) {
+    for (i = 0; i < 3 && rankConsump[i]; i++) {
         tmpLen = PrintString(rankNames[i], 2, 12 + 14 * i);
         if (tmpLen > maxLen)
             maxLen = tmpLen;
@@ -228,7 +228,39 @@ uint8_t RENDER_StatisticPage() {
     if (rankConsump[0] == 0)
         goto NO_CONSUMPTION;
     DrawRect(maxLen + 2, 13, 105, 18);
+    DrawRect(maxLen + 2, 27, maxLen + 2 + rankConsump[1] * (103 - maxLen) / rankConsump[0], 32);
+    DrawRect(maxLen + 2, 46, maxLen + 2 + rankConsump[2] * (103 - maxLen) / rankConsump[0], 51);
+    char csp[] = "999";
+    for (i = 0; i < 3; i++) {
+        if (!rankConsump[i])
+            break;
+        rankConsump[i] /= 3600;
+        if (rankConsump[i] >= 1000) {
+            if (rankConsump[i] >= 10000) {
+                csp[0] = '0' + rankConsump[i] / 10000;
+                csp[1] = '0' + rankConsump[i] / 1000 % 10;
+                csp[2] = 'k';
+                for (j = 0; j < 3; j++)
+                    PrintLetter(csp[j], 108 + j * 7, 12 + 14 * i);
+
+            } else {
+                csp[0] = '0' + rankConsump[i] / 1000;
+                csp[1] = '0' + rankConsump[i] / 100 % 10;
+                csp[2] = 'k';
+                for (j = 0; j < 3; j++)
+                    PrintLetter(csp[j], 108 + j * 7, 12 + 14 * i);
+                SET_HIGH(114, 19 + 14 * i);
+            }
+        } else {
+            csp[0] = '0' + rankConsump[i] / 100;
+            csp[1] = '0' + rankConsump[i] / 10 % 10;
+            csp[2] = '0' + rankConsump[i] % 10;
+            for (j = 0; j < 3; j++)
+                PrintLetter(csp[j], 108 + j * 7, 12 + 14 * i);
+        }
+    }
     NO_CONSUMPTION:
     updateFromTemp();
     return 0;
 }
+

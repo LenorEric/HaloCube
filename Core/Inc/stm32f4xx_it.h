@@ -28,7 +28,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "USART_REFACTOR.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -48,7 +48,8 @@
 
 /* Exported functions prototypes ---------------------------------------------*/
 void NMI_Handler(void);
-void HardFault_Handler(void);
+
+_Noreturn void HardFault_Handler(void);
 void MemManage_Handler(void);
 void BusFault_Handler(void);
 void UsageFault_Handler(void);

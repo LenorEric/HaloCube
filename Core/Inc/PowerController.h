@@ -8,6 +8,7 @@
 #include "GLOBAL_INCLUDE.h"
 #include "string.h"
 #include "Bulb.h"
+#include "PC.h"
 
 void goPowerSec();
 void PowerInit();

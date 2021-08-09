@@ -19,8 +19,8 @@ void TurnOnBulb() {
     GetBulbStatus();
     char receive_cmd[20][nRF_UART_RX_CMD_SIZE];
     Bulb_ON_FLAG = 1;
-    const char BulbOff[] = "HC+BulbOn";
-    nRF24L01_TR_CMD(BulbOff, receive_cmd);
+    const char BulbOn[] = "HC+BulbOn";
+    nRF24L01_TR_CMD(BulbOn, receive_cmd);
     Power_BulbSetStatus(1);
 }
 

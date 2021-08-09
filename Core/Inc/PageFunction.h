@@ -8,6 +8,7 @@
 #include "GLOBAL_INCLUDE.h"
 #include "RendererController.h"
 #include "Bulb.h"
+#include "PC.h"
 
 void PF_Restart();
 void PF_AirConditioner();
@@ -17,6 +18,5 @@ void PF_GotoPage0();
 void PF_GotoPage1();
 void PF_GotoPage2();
 
-extern uint8_t GLOBAL_PC_ON_FLAG;
 
 #endif //HALOCUBE_PAGEFUNCTION_H

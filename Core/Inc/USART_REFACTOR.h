@@ -26,6 +26,7 @@ void UART_RxCpltCallBack(void);
 #endif
 
 #ifdef REFACTOR_PRINTF_SCANF
+#define PSRFED
 #include <stdio.h>
 #endif
 

@@ -185,7 +185,7 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
     HAL_Delay(100);
-
+    printf("System Online\r\n");
     ///INIT OLED
     OLED_Init();
     OLED_Clear();
@@ -220,6 +220,7 @@ int main(void)
     printf("nRF24L01 INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init Power Calculator(Sync device status)
+    HAL_Delay(500);
     PowerInit();
     printf("PowerCalc INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
@@ -232,7 +233,7 @@ int main(void)
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);
     HAL_TIM_Base_Start_IT(&htim10);
-    printf("INIT FINISHED\r\n");
+    printf("INIT FINISHED, all system online\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */

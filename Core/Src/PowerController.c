@@ -4,8 +4,8 @@
 
 #include "PowerController.h"
 
-uint32_t EnergyBulb, EnergyPC, EnergyAC;
-uint16_t PowerBulb = 14, PowerPC = 100, PowerAC=700;
+uint32_t EnergyBulb, EnergyPC, EnergyAC, EnergyFridge;
+uint16_t PowerBulb = 18, PowerPC = 40, PowerAC=700, PowerFridge = 25;
 uint8_t PowerStatusFlag = 0; ///Each bit is a flag. From low to high(Bulb PC AC)
 
 void goPowerSec() {
@@ -18,10 +18,12 @@ void goPowerSec() {
     if (PowerStatusFlag & 1 << 2) {
         EnergyAC += PowerAC;
     }
+    EnergyFridge += PowerFridge;
 }
 
 void PowerInit(){
     GetBulbStatus();
+    GetPCStatus();
 }
 
 void Power_BulbSetStatus(uint8_t status) {
@@ -61,7 +63,7 @@ void Power_GiveTopThreeConsumption(char name[3][8], uint32_t consumption[3]) {
                     strcpy(tempn, name[j+1]);
                     consumption[j + 1] = consumption[j];
                     strcpy(name[j + 1],name[j]);
-                    consumption[j + 1] = tempe;
+                    consumption[j] = tempe;
                     strcpy(name[j], tempn);
                 }
             }

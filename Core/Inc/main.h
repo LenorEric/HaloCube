@@ -42,6 +42,7 @@ extern "C" {
 #include "PageFunction.h"
 #include "Battery.h"
 #include "nRF24L01.h"
+#include "EEPROM.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

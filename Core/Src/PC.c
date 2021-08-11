@@ -29,6 +29,6 @@ void TurnOffPC() {
 //    char receive_cmd[20][nRF_UART_RX_CMD_SIZE];
 //    const char PCOff[] = "HC+PCOff";
 //    nRF24L01_TR_CMD(PCOff, receive_cmd);
-    Power_BulbSetStatus(0);
+    Power_PCSetStatus(0);
 }
 

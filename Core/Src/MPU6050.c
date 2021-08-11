@@ -8,12 +8,12 @@ extern I2C_HandleTypeDef hi2c2;
 
 HAL_StatusTypeDef MPU6050_I2C_Write(uint16_t MemAddress, uint8_t *pData, uint16_t Size) {
     while ((&hi2c2)->State != HAL_I2C_STATE_READY);
-    return HAL_I2C_Mem_Write(&hi2c2, MPU6050_ADDRESS << 1, MemAddress, I2C_MEMADD_SIZE_8BIT, pData, Size, 100);
+    return HAL_I2C_Mem_Write(&hi2c2, MPU6050_ADDRESS, MemAddress, I2C_MEMADD_SIZE_8BIT, pData, Size, 100);
 }
 
 HAL_StatusTypeDef MPU6050_I2C_Read(uint16_t MemAddress, uint8_t *pData, uint16_t Size) {
     while ((&hi2c2)->State != HAL_I2C_STATE_READY);
-    return HAL_I2C_Mem_Read(&hi2c2, (MPU6050_ADDRESS << 1) | 1, MemAddress, I2C_MEMADD_SIZE_8BIT, pData, Size, 100);
+    return HAL_I2C_Mem_Read(&hi2c2, MPU6050_ADDRESS | 1u, MemAddress, I2C_MEMADD_SIZE_8BIT, pData, Size, 100);
 }
 
 uint8_t MPU6050_init() {
@@ -62,7 +62,7 @@ uint8_t MPU6050_init() {
     data2send = 0x80;
     MPU6050_I2C_Write(MPU_INTBP_CFG_REG, &data2send, 1);
     MPU6050_I2C_Read(MPU_DEVICE_ID_REG, &data4read, 1);
-    if (data4read == MPU6050_ADDRESS) {
+    if (data4read == MPU6050_ADDRESS>>1) {
         data2send = 0x01;
         MPU6050_I2C_Write(MPU_PWR_MGMT1_REG, &data2send, 1);
         data2send = 0x00;

@@ -30,8 +30,14 @@ ESP8266_STATE ESP_Receive_CMD(char receive_cmd[][ESP_UART_RX_CMD_SIZE]) {
     uint16_t p = 0, pd = 0;
     uint8_t ESP_CMD_BUF[ESP_UART_RX_CMD_SIZE];
     uint8_t count = 0;
+    uint32_t tickstart = HAL_GetTick();
     while (1) {
-        while (!(ESP_UART_RX_STA & 0x8000));
+        while (!(ESP_UART_RX_STA & 0x8000))
+            if (HAL_GetTick() - tickstart >= 6000) {
+                printf("ESP FAIL: Read Timeout\r\n");
+                ESP_UART_RX_STA = 0;
+                return ESP_FAIL;
+            }
         p = 0;
         while (p < (ESP_UART_RX_STA & 0x7fff)) {
             while (1) {
@@ -60,6 +66,10 @@ ESP8266_STATE ESP_Receive_CMD(char receive_cmd[][ESP_UART_RX_CMD_SIZE]) {
                 ESP_UART_RX_STA = 0;
                 return ESP_FAIL;
             }
+            if (!strcmp("busy p...", ESP_CMD_BUF)) {
+                ESP_UART_RX_STA = 0;
+                return ESP_FAIL;
+            }
         }
         ESP_UART_RX_STA = 0;
     }
@@ -67,7 +77,7 @@ ESP8266_STATE ESP_Receive_CMD(char receive_cmd[][ESP_UART_RX_CMD_SIZE]) {
 
 ESP8266_STATE ESP8266_TR_CMD(char *cmd2send, char **receive_cmd) {
     HAL_UART_Transmit(&ESP8266_UART_PORT, cmd2send, strlen(cmd2send), 100);
-    uint8_t try = 0;
+    uint8_t try = 254;
     ESP8266_STATE state = ESP_Receive_CMD(receive_cmd);
     while (state && ++try) {
         HAL_UART_Transmit(&ESP8266_UART_PORT, cmd2send, strlen(cmd2send), 100);
@@ -85,12 +95,14 @@ void ESP8266_WiFi_INIT() {
     const char quit_ap[] = "AT+CWQAP\r\n";
     ESP8266_TR_CMD(quit_ap, receive_cmd);
 #endif
+#ifdef ESP_CONNECT_AP_WHEN_INIT
     const char list_ap[] = "AT+CWJAP?\r\n";
     const char connect_ap[] = "AT+CWJAP=\"Lenoro\",\"ForAzeroth\"\r\n";
     ESP8266_TR_CMD(list_ap, receive_cmd);
     if (!(strcmp("No AP", receive_cmd[0]))) {
         ESP8266_TR_CMD(connect_ap, receive_cmd);
     }
+#endif
 }
 
 uint64_t getTimeStamp() {
@@ -99,7 +111,9 @@ uint64_t getTimeStamp() {
     const char connect_ap[] = "AT+CWJAP=\"Lenora\",\"ForAzeroth\"\r\n";
     ESP8266_TR_CMD(list_ap, receive_cmd);
     if (!(strcmp("No AP", receive_cmd[0]))) {
-        ESP8266_TR_CMD(connect_ap, receive_cmd);
+        if (ESP8266_TR_CMD(connect_ap, receive_cmd))
+            printf("Get time failed\r\n");
+        return 0;
     }
     uint64_t Net_timeStamp = 0;
     const char connect_NTP[] = "AT+CIPSTART=\"UDP\",\"time.windows.com\",123\r\n";
@@ -111,14 +125,10 @@ uint64_t getTimeStamp() {
                                  0xd9, 0x00, 0x00, 0x00, 0x00, 0x00};
     const char CIPCLOSE[] = "AT+CIPCLOSE\r\n";
     HAL_UART_Transmit(&ESP8266_UART_PORT, CIPCLOSE, sizeof(CIPCLOSE), 100);
-    while (1) {
-        if (ESP8266_TR_CMD(connect_NTP, receive_cmd))
-            continue;
-        if (ESP8266_TR_CMD(CIPMODE, receive_cmd))
-            continue;
-        if (ESP8266_TR_CMD(CIPSEND, receive_cmd))
-            continue;
-        break;
+    if (ESP8266_TR_CMD(connect_NTP, receive_cmd) || ESP8266_TR_CMD(CIPMODE, receive_cmd) ||
+        ESP8266_TR_CMD(CIPSEND, receive_cmd)) {
+        printf("Get time failed\r\n");
+        return 0;
     }
     HAL_UART_Transmit(&ESP8266_UART_PORT, NTP_UDP_DATA, 48, 100);
     while (!(ESP_UART_RX_STA & 0x8000));

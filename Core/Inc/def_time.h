@@ -11,6 +11,7 @@
 #include "Battery.h"
 #include "HaloCube_OLED.h"
 #include "PowerController.h"
+#include "EEPROM.h"
 
 typedef struct {
     uint16_t year;
@@ -19,6 +20,7 @@ typedef struct {
     uint8_t hour;
     uint8_t min;
     uint8_t sec;
+    uint32_t timeStampOfSec;
 } GL_TM;
 
 extern GL_TM GLOBAL_TIME_INDICATOR;

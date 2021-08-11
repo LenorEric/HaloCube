@@ -13,7 +13,7 @@
 #include "inv_mpu_dmp_motion_driver.h"
 #include "USART_REFACTOR.h"
 
-#define MPU6050_ADDRESS 0x68
+#define MPU6050_ADDRESS 0xD0u
 
 #define MPU_SELF_TESTX_REG		0x0D
 #define MPU_SELF_TESTY_REG		0x0E

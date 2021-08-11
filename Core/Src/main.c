@@ -44,11 +44,13 @@ ADC_HandleTypeDef hadc3;
 
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
+I2C_HandleTypeDef hi2c3;
 DMA_HandleTypeDef hdma_i2c1_tx;
-DMA_HandleTypeDef hdma_i2c2_rx;
-DMA_HandleTypeDef hdma_i2c2_tx;
+DMA_HandleTypeDef hdma_i2c3_tx;
 
 IWDG_HandleTypeDef hiwdg;
+
+SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim10;
 TIM_HandleTypeDef htim11;
@@ -61,8 +63,8 @@ UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart3_rx;
 
-DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
 DMA_HandleTypeDef hdma_memtomem_dma2_stream1;
+DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -82,6 +84,8 @@ static void MX_IWDG_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_I2C3_Init(void);
+static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -96,6 +100,7 @@ uint8_t REFRESHING_FLAG = 0;
 ///[1] for angel, pos is y-pos, from 0 ~ 90
 uint8_t GLOBAL_DIRECTION_INDICATOR[2] = {0x0};
 uint8_t GLOBAL_ACTION_INDICATOR = 0;
+char GLOBAL_INIT_STATE_INDICATOR[20] = "";
 
 extern uint16_t GLOBAL_FRAME_INDICATOR;
 
@@ -183,6 +188,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM10_Init();
   MX_USART3_UART_Init();
+  MX_I2C3_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     HAL_Delay(100);
     printf("System Online\r\n");
@@ -210,29 +217,43 @@ int main(void)
     while (mpu_dmp_init()) while (MPU6050_init()) HAL_Delay(1000);
 #endif
     HAL_IWDG_Refresh(&hiwdg);
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"mpu6050 inited");
     printf("MPU6050 INITED\r\n");
     ///Get Battery Status
     HCB_GetBattery();
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"battery updated");
     printf("Battery Updated\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init nRF24L01
     nRF24L01_INIT();
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"nrf24l01 inited");
     printf("nRF24L01 INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init Power Calculator(Sync device status)
     HAL_Delay(500);
     PowerInit();
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"powercalc inited");
     printf("PowerCalc INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
+    ///Read possible data from EEPROM
+    EEPROM_init();
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"eeprom read");
+    printf("EEPROM READ\r\n");
     ///Init ESP8266 and get time
     ESP8266_WiFi_INIT();
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"esp8266 inited");
     printf("ESP8266 INITED\r\n");
+    HAL_IWDG_Refresh(&hiwdg);
+
     getTime(getTimeStamp());
+    HAL_TIM_Base_Start_IT(&htim10);
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"systime inited");
     printf("SysTime INITED\r\n");
+    HAL_IWDG_Refresh(&hiwdg);
     ///Init finished
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);
-    HAL_TIM_Base_Start_IT(&htim10);
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"init finished");
     printf("INIT FINISHED, all system online\r\n");
   /* USER CODE END 2 */
 
@@ -241,7 +262,7 @@ int main(void)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
-        HAL_Delay(10);
+        HAL_Delay(100);
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
     /* USER CODE END WHILE */
 
@@ -414,6 +435,40 @@ static void MX_I2C2_Init(void)
 }
 
 /**
+  * @brief I2C3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C3_Init(void)
+{
+
+  /* USER CODE BEGIN I2C3_Init 0 */
+
+  /* USER CODE END I2C3_Init 0 */
+
+  /* USER CODE BEGIN I2C3_Init 1 */
+
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.ClockSpeed = 100000;
+  hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C3_Init 2 */
+
+  /* USER CODE END I2C3_Init 2 */
+
+}
+
+/**
   * @brief IWDG Initialization Function
   * @param None
   * @retval None
@@ -430,7 +485,7 @@ static void MX_IWDG_Init(void)
   /* USER CODE END IWDG_Init 1 */
   hiwdg.Instance = IWDG;
   hiwdg.Init.Prescaler = IWDG_PRESCALER_256;
-  hiwdg.Init.Reload = 937;
+  hiwdg.Init.Reload = 1874;
   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
   {
     Error_Handler();
@@ -438,6 +493,44 @@ static void MX_IWDG_Init(void)
   /* USER CODE BEGIN IWDG_Init 2 */
 
   /* USER CODE END IWDG_Init 2 */
+
+}
+
+/**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
 
 }
 
@@ -667,8 +760,8 @@ static void MX_USART3_UART_Init(void)
 /**
   * Enable DMA controller clock
   * Configure DMA for memory to memory transfers
-  *   hdma_memtomem_dma2_stream0
   *   hdma_memtomem_dma2_stream1
+  *   hdma_memtomem_dma2_stream0
   */
 static void MX_DMA_Init(void)
 {
@@ -676,25 +769,6 @@ static void MX_DMA_Init(void)
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
   __HAL_RCC_DMA2_CLK_ENABLE();
-
-  /* Configure DMA request hdma_memtomem_dma2_stream0 on DMA2_Stream0 */
-  hdma_memtomem_dma2_stream0.Instance = DMA2_Stream0;
-  hdma_memtomem_dma2_stream0.Init.Channel = DMA_CHANNEL_0;
-  hdma_memtomem_dma2_stream0.Init.Direction = DMA_MEMORY_TO_MEMORY;
-  hdma_memtomem_dma2_stream0.Init.PeriphInc = DMA_PINC_ENABLE;
-  hdma_memtomem_dma2_stream0.Init.MemInc = DMA_MINC_ENABLE;
-  hdma_memtomem_dma2_stream0.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
-  hdma_memtomem_dma2_stream0.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
-  hdma_memtomem_dma2_stream0.Init.Mode = DMA_NORMAL;
-  hdma_memtomem_dma2_stream0.Init.Priority = DMA_PRIORITY_LOW;
-  hdma_memtomem_dma2_stream0.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
-  hdma_memtomem_dma2_stream0.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
-  hdma_memtomem_dma2_stream0.Init.MemBurst = DMA_MBURST_SINGLE;
-  hdma_memtomem_dma2_stream0.Init.PeriphBurst = DMA_PBURST_SINGLE;
-  if (HAL_DMA_Init(&hdma_memtomem_dma2_stream0) != HAL_OK)
-  {
-    Error_Handler( );
-  }
 
   /* Configure DMA request hdma_memtomem_dma2_stream1 on DMA2_Stream1 */
   hdma_memtomem_dma2_stream1.Instance = DMA2_Stream1;
@@ -707,10 +781,29 @@ static void MX_DMA_Init(void)
   hdma_memtomem_dma2_stream1.Init.Mode = DMA_NORMAL;
   hdma_memtomem_dma2_stream1.Init.Priority = DMA_PRIORITY_LOW;
   hdma_memtomem_dma2_stream1.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
-  hdma_memtomem_dma2_stream1.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+  hdma_memtomem_dma2_stream1.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
   hdma_memtomem_dma2_stream1.Init.MemBurst = DMA_MBURST_SINGLE;
   hdma_memtomem_dma2_stream1.Init.PeriphBurst = DMA_PBURST_SINGLE;
   if (HAL_DMA_Init(&hdma_memtomem_dma2_stream1) != HAL_OK)
+  {
+    Error_Handler( );
+  }
+
+  /* Configure DMA request hdma_memtomem_dma2_stream0 on DMA2_Stream0 */
+  hdma_memtomem_dma2_stream0.Instance = DMA2_Stream0;
+  hdma_memtomem_dma2_stream0.Init.Channel = DMA_CHANNEL_0;
+  hdma_memtomem_dma2_stream0.Init.Direction = DMA_MEMORY_TO_MEMORY;
+  hdma_memtomem_dma2_stream0.Init.PeriphInc = DMA_PINC_ENABLE;
+  hdma_memtomem_dma2_stream0.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_memtomem_dma2_stream0.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+  hdma_memtomem_dma2_stream0.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+  hdma_memtomem_dma2_stream0.Init.Mode = DMA_NORMAL;
+  hdma_memtomem_dma2_stream0.Init.Priority = DMA_PRIORITY_LOW;
+  hdma_memtomem_dma2_stream0.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+  hdma_memtomem_dma2_stream0.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+  hdma_memtomem_dma2_stream0.Init.MemBurst = DMA_MBURST_SINGLE;
+  hdma_memtomem_dma2_stream0.Init.PeriphBurst = DMA_PBURST_SINGLE;
+  if (HAL_DMA_Init(&hdma_memtomem_dma2_stream0) != HAL_OK)
   {
     Error_Handler( );
   }
@@ -719,18 +812,15 @@ static void MX_DMA_Init(void)
   /* DMA1_Stream1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
-  /* DMA1_Stream2_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+  /* DMA1_Stream4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
   /* DMA1_Stream5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
   /* DMA1_Stream6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
-  /* DMA1_Stream7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
   /* DMA2_Stream0_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);

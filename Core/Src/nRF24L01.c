@@ -74,7 +74,7 @@ nRF24L01_STATE nRF_Receive_CMD(char receive_cmd[][nRF_UART_RX_CMD_SIZE]) {
 nRF24L01_STATE nRF24L01_TR_CMD(char cmd2send[], char **receive_cmd) {
     nRF_UART_RX_STA = 0;
     HAL_UART_Transmit(&nRF24L01_UART_PORT, cmd2send, strlen(cmd2send)+1, 100);
-    uint8_t try = 230;
+    uint8_t try = 245;
     nRF24L01_STATE state = nRF_Receive_CMD(receive_cmd);
     while (state && ++try) {
         nRF_UART_RX_STA = 0;

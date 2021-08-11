@@ -12,6 +12,7 @@ extern uint8_t GLOBAL_PAGE_INDICATOR;
 extern uint8_t GLOBAL_SELECT_FLAG;
 extern uint8_t GLOBAL_INITED_FLAG;
 extern Page PageList[31];
+extern char GLOBAL_INIT_STATE_INDICATOR[20];
 
 ///In case of Refreshing bug
 uint8_t OLEDTemp[8][128];
@@ -84,10 +85,9 @@ uint8_t openScreenAnimation() {
     if (GLOBAL_FRAME_INDICATOR > 100 && GLOBAL_INITED_FLAG) {
         return 1;
     }
-    HAL_DMA_PollForTransfer(&hdma_memtomem_dma2_stream0, HAL_DMA_FULL_TRANSFER, 2000);
-    HAL_DMA_Start(&hdma_memtomem_dma2_stream0,
-                  (uint32_t) HaloCubeAnimation[GLOBAL_FRAME_INDICATOR < 51 ? GLOBAL_FRAME_INDICATOR : 50][0],
-                  (uint32_t) OLEDBuffer, 1024);
+    memcpy(OLEDTemp, HaloCubeAnimation[GLOBAL_FRAME_INDICATOR < 51 ? GLOBAL_FRAME_INDICATOR : 50][0], 1024);
+    PrintString(GLOBAL_INIT_STATE_INDICATOR, 0, 0);
+    updateFromTemp();
     return 0;
 }
 
@@ -227,9 +227,9 @@ uint8_t RENDER_StatisticPage() {
     }
     if (rankConsump[0] == 0)
         goto NO_CONSUMPTION;
-    DrawRect(maxLen + 2, 13, 105, 18);
-    DrawRect(maxLen + 2, 27, maxLen + 2 + rankConsump[1] * (103 - maxLen) / rankConsump[0], 32);
-    DrawRect(maxLen + 2, 46, maxLen + 2 + rankConsump[2] * (103 - maxLen) / rankConsump[0], 51);
+    DrawRect(maxLen + 2, 13, 105, 19);
+    DrawRect(maxLen + 2, 27, maxLen + 2 + rankConsump[1] * (103 - maxLen) / rankConsump[0], 33);
+    DrawRect(maxLen + 2, 46, maxLen + 2 + rankConsump[2] * (103 - maxLen) / rankConsump[0], 52);
     char csp[] = "999";
     for (i = 0; i < 3; i++) {
         if (!rankConsump[i])

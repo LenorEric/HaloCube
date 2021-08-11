@@ -48,11 +48,11 @@ void Power_ACSetStatus(uint8_t status) {
 }
 
 void Power_GiveTopThreeConsumption(char name[3][8], uint32_t consumption[3]) {
-    uint32_t energy[] = {EnergyBulb, EnergyPC, EnergyAC};
-    char appName[][8] = {"bulb", "pc", "ac"};
+    uint32_t energy[] = {EnergyBulb, EnergyPC, EnergyAC,EnergyFridge};
+    char appName[][8] = {"bulb", "pc", "ac","fridge"};
     uint32_t tempe = 0;
     char tempn[8];
-    for (uint8_t i = 0; i < 3; i++) {
+    for (uint8_t i = 0; i < sizeof(energy)/sizeof(uint32_t); i++) {
         for (uint8_t j = 2; j != 255; j--) {
             if (energy[i] >= consumption[j]) {
                 if (j == 2) {

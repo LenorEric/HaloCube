@@ -32,16 +32,23 @@ uint8_t GetBulbStatus() {
     char receive_cmd[20][nRF_UART_RX_CMD_SIZE];
     const char BulbGetStatus[] = "HC+BulbGetStatus";
     nRF24L01_TR_CMD(BulbGetStatus, receive_cmd);
-    if (strcmp("HC_OK", receive_cmd[1]))
+    if (strcmp("HC_OK", receive_cmd[1])){
+        Bulb_ON_FLAG = 0;
+        Power_BulbSetStatus(0);
+        printf("Warning: Unable to get bulb status\r\n");
+        return 0;
         THROW_ERROR;
-    if (receive_cmd[0][0]){
+    }
+    if (receive_cmd[0][0] == 1){
         Bulb_ON_FLAG = 1;
         Power_BulbSetStatus(1);
         return 1;
     }
-    else{
+    else if (receive_cmd[0][0] == 0){
         Bulb_ON_FLAG = 0;
         Power_BulbSetStatus(0);
         return 0;
     }
+    else printf("Warning: Wrong bulb status got");
+    return 0;
 }

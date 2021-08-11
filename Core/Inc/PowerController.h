@@ -9,6 +9,7 @@
 #include "string.h"
 #include "Bulb.h"
 #include "PC.h"
+#include "def_time.h"
 
 void goPowerSec();
 void PowerInit();

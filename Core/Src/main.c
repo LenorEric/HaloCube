@@ -192,7 +192,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     HAL_Delay(100);
-    printf("System Online\r\n");
+    printf("\r\n\r\n****System Online****\r\n");
     ///INIT OLED
     OLED_Init();
     OLED_Clear();
@@ -206,8 +206,8 @@ int main(void)
     printf("RenderCon INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Pre-Init finished, begin loading page rendering
-    HAL_TIM_Base_Start_IT(&htim14);
     HAL_TIM_Base_Start_IT(&htim13);
+    HAL_TIM_Base_Start_IT(&htim14);
     ///Add Page
     PageInit();
     HAL_IWDG_Refresh(&hiwdg);
@@ -239,13 +239,18 @@ int main(void)
     EEPROM_init();
     strcpy(GLOBAL_INIT_STATE_INDICATOR,"eeprom read");
     printf("EEPROM READ\r\n");
-    ///Init ESP8266 and get time
+    ///Init ESP8266
     ESP8266_WiFi_INIT();
     strcpy(GLOBAL_INIT_STATE_INDICATOR,"esp8266 inited");
     printf("ESP8266 INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
-
+    HAL_Delay(100);
+    HAL_IWDG_Refresh(&hiwdg);
+    ///Get time from network
     getTime(getTimeStamp());
+    HAL_IWDG_Refresh(&hiwdg);
+    getTime(getTimeStamp());
+    HAL_IWDG_Refresh(&hiwdg);
     HAL_TIM_Base_Start_IT(&htim10);
     strcpy(GLOBAL_INIT_STATE_INDICATOR,"systime inited");
     printf("SysTime INITED\r\n");

@@ -13,15 +13,19 @@
 #include "PowerController.h"
 #include "EEPROM.h"
 #include "BackgroundTaskController.h"
+#include "time.h"
+
+#define DT_TS_TODAY GLOBAL_TIME_INDICATOR.timestampOfSec/86400%32
 
 typedef struct {
     uint16_t year;
     uint8_t mon;
     uint8_t day;
+    uint8_t w_day;
     uint8_t hour;
     uint8_t min;
     uint8_t sec;
-    uint32_t timeStampOfSec;
+    uint32_t timestampOfSec;
 } GL_TM;
 
 extern GL_TM GLOBAL_TIME_INDICATOR;

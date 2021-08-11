@@ -93,7 +93,7 @@ void OLED_Auto_Refresh(void) {
     uint8_t page = 0, col = 0;
     uint16_t Size = 0;
     while (page != 8) {
-        while (OLEDBuffer[page][col] == LastOLEDBuffer[page][col]) {
+        while (OLEDBuffer[page][col] == LastOLEDBuffer[page][col] && page<8) {
             col++;
             if (col == 128) {
                 col = 0;

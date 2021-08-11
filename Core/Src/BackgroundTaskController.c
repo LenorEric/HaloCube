@@ -4,18 +4,21 @@
 
 #include "BackgroundTaskController.h"
 
-BackgroundTaskFunc BT_List[128];
-uint8_t left=0, right=0;
+BackgroundTaskFunc BT_List[256];
+uint8_t left = 0, right = 0;
 
 void BT_Push(BackgroundTaskFunc func) {
+    if (right+1 == left) {
+        printf("BT Buffer overflow\r\n");
+        return;
+    }
     BT_List[right++] = func;
-    right %= 128;
 }
 
 void BT_HandleNextTask() {
-    if (left == right)
+    if (left == right){
         return;
+    }
     BT_List[left]();
     left++;
-    left %= 128;
 }

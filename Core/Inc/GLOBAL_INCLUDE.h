@@ -6,6 +6,7 @@
 #define HALOCUBE_DEV_GLOBAL_INCLUDE_H
 
 #include "stm32f4xx_hal.h"
+#include "USART_REFACTOR.h"
 
 //#define MPU6050_IGNORE_SELF_TEST
 //#define MPU6050_DMP_ON

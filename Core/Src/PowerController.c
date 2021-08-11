@@ -4,8 +4,12 @@
 
 #include "PowerController.h"
 
-uint32_t EnergyBulb, EnergyPC, EnergyAC, EnergyFridge;
-uint16_t PowerBulb = 18, PowerPC = 40, PowerAC=700, PowerFridge = 25;
+uint32_t EnergyRecord[32][32];
+#define EnergyBulb EnergyRecord[DT_TS_TODAY][0]
+#define EnergyPC EnergyRecord[DT_TS_TODAY][1]
+#define EnergyAC EnergyRecord[DT_TS_TODAY][2]
+#define EnergyFridge EnergyRecord[DT_TS_TODAY][3]
+uint16_t PowerBulb = 18, PowerPC = 4000, PowerAC=700, PowerFridge = 25;
 uint8_t PowerStatusFlag = 0; ///Each bit is a flag. From low to high(Bulb PC AC)
 
 void goPowerSec() {

@@ -13,7 +13,6 @@ uint8_t HCB_GetBattery(){
     HAL_ADC_Start(&hadc3);
     HAL_ADC_PollForConversion(&hadc3, 10);
     GetBattery = HAL_ADC_GetValue(&hadc3);
-    printf("Battery Got, %d\r\n", GetBattery);
     if (GetBattery) GLOBAL_BATTERY_INDICATOR = GetBattery;
     return GetBattery;
 }

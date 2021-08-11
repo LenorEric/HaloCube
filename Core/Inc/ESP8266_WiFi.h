@@ -8,7 +8,7 @@
 #define ESP8266_UART_PORT huart2
 #define ESP8266_IRQ_HANDLER USART2_IRQHandler
 #define ESP_UART_RX_BUF_SIZE 1024
-#define ESP_UART_RX_CMD_SIZE 1024
+#define ESP_UART_RX_CMD_SIZE 64
 
 typedef enum {
     ESP_OK = 0,

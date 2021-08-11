@@ -33,7 +33,7 @@ ESP8266_STATE ESP_Receive_CMD(char receive_cmd[][ESP_UART_RX_CMD_SIZE]) {
     uint32_t tickstart = HAL_GetTick();
     while (1) {
         while (!(ESP_UART_RX_STA & 0x8000))
-            if (HAL_GetTick() - tickstart >= 6000) {
+            if (HAL_GetTick() - tickstart >= 4500) {
                 printf("ESP FAIL: Read Timeout\r\n");
                 ESP_UART_RX_STA = 0;
                 return ESP_FAIL;
@@ -48,6 +48,11 @@ ESP8266_STATE ESP_Receive_CMD(char receive_cmd[][ESP_UART_RX_CMD_SIZE]) {
                 } else
                     ESP_CMD_BUF[pd++] = ESP_UART_RX_BUF[p];
                 p++;
+                if (pd == ESP_UART_RX_CMD_SIZE) {
+                    printf("ESP FAIL: CMD overflow\r\n");
+                    ESP_UART_RX_STA = 0;
+                    return ESP_FAIL;
+                }
             }
             p += 2;
             if (!pd) continue;
@@ -76,12 +81,15 @@ ESP8266_STATE ESP_Receive_CMD(char receive_cmd[][ESP_UART_RX_CMD_SIZE]) {
 }
 
 ESP8266_STATE ESP8266_TR_CMD(char *cmd2send, char **receive_cmd) {
+    ESP_UART_RX_STA = 0;
     HAL_UART_Transmit(&ESP8266_UART_PORT, cmd2send, strlen(cmd2send), 100);
-    uint8_t try = 254;
+    uint8_t try = 253;
     ESP8266_STATE state = ESP_Receive_CMD(receive_cmd);
     while (state && ++try) {
+        ESP_UART_RX_STA = 0;
         HAL_UART_Transmit(&ESP8266_UART_PORT, cmd2send, strlen(cmd2send), 100);
         state = ESP_Receive_CMD(receive_cmd);
+        HAL_Delay(10);
     }
     return state;
 }
@@ -111,9 +119,10 @@ uint64_t getTimeStamp() {
     const char connect_ap[] = "AT+CWJAP=\"Lenora\",\"ForAzeroth\"\r\n";
     ESP8266_TR_CMD(list_ap, receive_cmd);
     if (!(strcmp("No AP", receive_cmd[0]))) {
-        if (ESP8266_TR_CMD(connect_ap, receive_cmd))
+        if (ESP8266_TR_CMD(connect_ap, receive_cmd)) {
             printf("Get time failed\r\n");
-        return 0;
+            return 0;
+        }
     }
     uint64_t Net_timeStamp = 0;
     const char connect_NTP[] = "AT+CIPSTART=\"UDP\",\"time.windows.com\",123\r\n";

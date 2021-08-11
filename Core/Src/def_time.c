@@ -15,22 +15,31 @@ void getTime(uint64_t Net_timeStamp) {
     /// todo: Date calc
 }
 
+///Function shell
+void SHELL_HCB_GetBattery(){
+    HCB_GetBattery();
+}
+
+void SHELL_getTime(){
+    getTime(getTimeStamp());
+}
+
 void goSec() {
     GLOBAL_TIME_INDICATOR.sec++;
     /// Each sec
-    goPowerSec();
+    BT_Push(goPowerSec);
     if (GLOBAL_TIME_INDICATOR.sec >= 60) {
         GLOBAL_TIME_INDICATOR.sec = 0;
         GLOBAL_TIME_INDICATOR.min++;
         /// Each min
-        HCB_GetBattery();
-        OLED_Refresh();
-        EEPROM_Data_Save_Task();
+        BT_Push(SHELL_HCB_GetBattery);
+        BT_Push(OLED_Refresh);
+        BT_Push(EEPROM_Data_Save_Task);
         if (GLOBAL_TIME_INDICATOR.min >= 60) {
             GLOBAL_TIME_INDICATOR.min = 0;
             GLOBAL_TIME_INDICATOR.hour++;
             /// Each hour
-            getTime(getTimeStamp());
+            BT_Push(SHELL_getTime);
             if (GLOBAL_TIME_INDICATOR.hour >= 24) {
                 GLOBAL_TIME_INDICATOR.hour = 0;
                 /// todo: Date calc

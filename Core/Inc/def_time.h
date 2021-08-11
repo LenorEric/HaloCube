@@ -12,6 +12,7 @@
 #include "HaloCube_OLED.h"
 #include "PowerController.h"
 #include "EEPROM.h"
+#include "BackgroundTaskController.h"
 
 typedef struct {
     uint16_t year;

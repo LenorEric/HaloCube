@@ -43,6 +43,7 @@ extern "C" {
 #include "Battery.h"
 #include "nRF24L01.h"
 #include "EEPROM.h"
+#include "BackgroundTaskController.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

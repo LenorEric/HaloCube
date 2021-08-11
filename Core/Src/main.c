@@ -262,7 +262,7 @@ int main(void)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
-        HAL_Delay(100);
+        BT_HandleNextTask();
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
     /* USER CODE END WHILE */
 

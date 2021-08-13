@@ -6,5 +6,9 @@
 #define HALOCUBE_DEBUGCOMMAND_H
 
 #include "GLOBAL_INCLUDE.h"
+#include <string.h>
+#include "EEPROM.h"
+#include "BackgroundTaskController.h"
+#include <unistd.h>
 
 #endif //HALOCUBE_DEBUGCOMMAND_H

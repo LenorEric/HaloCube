@@ -42,12 +42,12 @@ __weak void UART_RxCpltCallBack(void){
 void UART_IQR_HANDLER(void) {
     if (__HAL_UART_GET_FLAG(&UART_IO_PORT, UART_FLAG_IDLE) != RESET)  // 空闲中断标记被置位
     {
-        __HAL_UART_CLEAR_IDLEFLAG(&UART_IO_PORT);  // 清楚中断标记
-        HAL_UART_DMAStop(&UART_IO_PORT);           // 停止DMA接收
+        __HAL_UART_CLEAR_IDLEFLAG(&UART_IO_PORT);  /// 清除中断标记
+        HAL_UART_DMAStop(&UART_IO_PORT);           /// 停止DMA接收
         UART_RX_STA = UART_RX_BUF_SIZE - __HAL_DMA_GET_COUNTER(UART_IO_PORT.hdmarx);  // 总数据量减去未接收到的数据量为已经接收到的数据量
-        UART_RX_BUF[UART_RX_STA] = 0;  // 添加结束符
-        UART_RX_STA |= 0X8000;         // 标记接收结束
-        HAL_UART_Receive_DMA(&UART_IO_PORT, UART_RX_BUF, UART_RX_BUF_SIZE);  // 重新启动DMA接收
+        UART_RX_BUF[UART_RX_STA] = 0;  /// 添加结束符
+        UART_RX_STA |= 0X8000;         /// 标记接收结束
+        HAL_UART_Receive_DMA(&UART_IO_PORT, UART_RX_BUF, UART_RX_BUF_SIZE);  /// 重新启动DMA接收
         UART_RxCpltCallBack();
     }
 }

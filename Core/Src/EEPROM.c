@@ -23,7 +23,7 @@ HAL_StatusTypeDef EEPROM_I2C_Read(uint16_t MemAddress, uint8_t *pData, uint16_t 
 }
 
 uint8_t EEPROM_init() {
-    uint32_t timeStamp=0;
+    uint32_t timeStamp = 0;
     EEPROM_Read_Data(0, &timeStamp, 4);
     GLOBAL_TIME_INDICATOR.timestampOfSec = timeStamp;
     EEPROM_Read_Data(1, EnergyRecord, sizeof(EnergyRecord));
@@ -44,7 +44,7 @@ void EEPROM_Save_Data(uint16_t pos, uint8_t *pData, uint16_t Size) {
     while (iter < Size) {
         do {
             EEPROM_I2C_Write_DMA(pos * 4 + iter, pData + iter, Size - iter > 4 ? 4 : Size - iter);
-            EEPROM_Read_Data(pos + iter/4, verify, Size - iter > 4 ? 4 : Size - iter);
+            EEPROM_Read_Data(pos + iter / 4, verify, Size - iter > 4 ? 4 : Size - iter);
         } while (memcmp(pData + iter, verify, Size - iter > 4 ? 4 : Size - iter));
         iter += 4;
     }
@@ -59,12 +59,13 @@ void EEPROM_Read_Data(uint16_t pos, uint8_t *pData, uint16_t Size) {
 }
 
 void EEPROM_Data_Save_Task() {
-    if (GLOBAL_TIME_INDICATOR.timestampOfSec)
-        EEPROM_Save_Data(0, &GLOBAL_TIME_INDICATOR.timestampOfSec, 4);
-    EEPROM_Save_Data(1 + DT_TS_TODAY * 32, EnergyRecord[DT_TS_TODAY], sizeof(EnergyRecord[DT_TS_TODAY]));
+    if (GLOBAL_TIME_INDICATOR.timestampOfSec > 31536000) { /// Ten years
+        EEPROM_Save_Data(0, (uint8_t *) &GLOBAL_TIME_INDICATOR.timestampOfSec, 4);
+        EEPROM_Save_Data(1 + DT_TS_TODAY * 32, (uint8_t *) EnergyRecord[DT_TS_TODAY], sizeof(EnergyRecord[DT_TS_TODAY]));
+    }
 }
 
 void EEPROM_Clear() {
     memset(EnergyRecord, 0, sizeof(EnergyRecord));
-    EEPROM_Save_Data(1, EnergyRecord, sizeof(EnergyRecord));
+    EEPROM_Save_Data(1, (uint8_t *) EnergyRecord, sizeof(EnergyRecord));
 }

@@ -14,9 +14,11 @@ uint8_t EEPROM_init();
 void EEPROM_I2C_Write_DMA(uint16_t MemAddress, uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef EEPROM_I2C_Read(uint16_t MemAddress, uint8_t *pData, uint16_t Size);
 
-void EEPROM_Save_Data(uint16_t pos, void *pData, uint16_t Size);
-void EEPROM_Read_Data(uint16_t pos, void *pData, uint16_t Size);
+void EEPROM_Save_Data(uint16_t pos, uint8_t *pData, uint16_t Size);
+void EEPROM_Read_Data(uint16_t pos, uint8_t *pData, uint16_t Size);
 
 void EEPROM_Data_Save_Task();
+
+void EEPROM_Clear();
 
 #endif //HALOCUBE_EEPROM_H

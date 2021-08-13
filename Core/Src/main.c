@@ -50,8 +50,6 @@ DMA_HandleTypeDef hdma_i2c3_tx;
 
 IWDG_HandleTypeDef hiwdg;
 
-SPI_HandleTypeDef hspi1;
-
 TIM_HandleTypeDef htim10;
 TIM_HandleTypeDef htim11;
 TIM_HandleTypeDef htim13;
@@ -85,7 +83,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_I2C3_Init(void);
-static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -110,7 +107,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         return;
     }
     if (htim->Instance == TIM11) {
-        HAL_IWDG_Refresh(&hiwdg);
         GetDirection(GLOBAL_DIRECTION_INDICATOR);
         GLOBAL_ACTION_INDICATOR = GLOBAL_DIRECTION_INDICATOR[0] / 64;
         if (GLOBAL_DIRECTION_INDICATOR[1] > 25) {
@@ -189,7 +185,6 @@ int main(void)
   MX_TIM10_Init();
   MX_USART3_UART_Init();
   MX_I2C3_Init();
-  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
     HAL_Delay(100);
     printf("\r\n\r\n****System Online****\r\n");
@@ -208,6 +203,8 @@ int main(void)
     ///Pre-Init finished, begin loading page rendering
     HAL_TIM_Base_Start_IT(&htim13);
     HAL_TIM_Base_Start_IT(&htim14);
+    ///System factor
+    REFACTORED_UART_DMA_INIT();
     ///Add Page
     PageInit();
     HAL_IWDG_Refresh(&hiwdg);
@@ -237,8 +234,8 @@ int main(void)
     HAL_IWDG_Refresh(&hiwdg);
     ///Read possible data from EEPROM
     EEPROM_init();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR,"eeprom read");
-    printf("EEPROM READ\r\n");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR,"eeprom inited");
+    printf("EEPROM INITED\r\n");
     ///Init ESP8266
     ESP8266_WiFi_INIT();
     strcpy(GLOBAL_INIT_STATE_INDICATOR,"esp8266 inited");
@@ -267,6 +264,7 @@ int main(void)
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
+        HAL_IWDG_Refresh(&hiwdg);
         BT_HandleNextTask();
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
     /* USER CODE END WHILE */
@@ -502,44 +500,6 @@ static void MX_IWDG_Init(void)
 }
 
 /**
-  * @brief SPI1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI1_Init(void)
-{
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
-
-}
-
-/**
   * @brief TIM10 Initialization Function
   * @param None
   * @retval None
@@ -588,7 +548,7 @@ static void MX_TIM11_Init(void)
   htim11.Instance = TIM11;
   htim11.Init.Prescaler = 3199;
   htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim11.Init.Period = 499;
+  htim11.Init.Period = 124;
   htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim11.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim11) != HAL_OK)

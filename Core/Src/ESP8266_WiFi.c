@@ -120,7 +120,7 @@ uint64_t getTimeStamp() {
     ESP8266_TR_CMD(list_ap, receive_cmd);
     if (!(strcmp("No AP", receive_cmd[0]))) {
         if (ESP8266_TR_CMD(connect_ap, receive_cmd)) {
-            printf("Get time failed\r\n");
+            printf("Get time failed: NO AP\r\n");
             return 0;
         }
     }
@@ -136,7 +136,7 @@ uint64_t getTimeStamp() {
     HAL_UART_Transmit(&ESP8266_UART_PORT, CIPCLOSE, sizeof(CIPCLOSE), 100);
     if (ESP8266_TR_CMD(connect_NTP, receive_cmd) || ESP8266_TR_CMD(CIPMODE, receive_cmd) ||
         ESP8266_TR_CMD(CIPSEND, receive_cmd)) {
-        printf("Get time failed\r\n");
+        printf("Get time failed: Failed Connection\r\n");
         return 0;
     }
     HAL_UART_Transmit(&ESP8266_UART_PORT, NTP_UDP_DATA, 48, 100);

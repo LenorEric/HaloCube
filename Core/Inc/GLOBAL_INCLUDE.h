@@ -19,7 +19,7 @@
 #define DL_DEBUG 3
 #define DL_LOG 4
 
-#define DebugLevel DL_DEBUG
+#define DebugLevel DL_NORMAL
 
 //#define ESP_RESTART_WHEN_INIT
 //#define ESP_CONNECT_AP_WHEN_INIT

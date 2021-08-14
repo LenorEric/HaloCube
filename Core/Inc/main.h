@@ -33,7 +33,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "HaloCube_OLED.h"
-#include "RendererController.h"
+#include "PageController.h"
 #include "Renderers.h"
 #include "MPU6050.h"
 #include "GLOBAL_INCLUDE.h"

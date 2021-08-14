@@ -31,7 +31,9 @@ nRF24L01_STATE nRF_Receive_CMD(char receive_cmd[][nRF_UART_RX_CMD_SIZE]) {
     while (1) {
         while (!(nRF_UART_RX_STA & 0x8000))
             if (HAL_GetTick() - tickstart >= 200){
-                printf("nRF FAIL\r\n");
+#if DebugLevel >= DL_ERROR
+                printf("!!Warning!!: nRF Timeout\r\n");
+#endif
                 return nRF_FAIL;
             }
         p = 0;

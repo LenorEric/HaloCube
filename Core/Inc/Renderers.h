@@ -5,7 +5,7 @@
 #ifndef HALOCUBE_DEV_RENDERERS_H
 #define HALOCUBE_DEV_RENDERERS_H
 
-#include "RendererController.h"
+#include "PageController.h"
 #include "HaloCube_OLED.h"
 #include "string.h"
 #include "GLOBAL_INCLUDE.h"

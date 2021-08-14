@@ -6,7 +6,7 @@
 #define HALOCUBE_PAGEFUNCTION_H
 
 #include "GLOBAL_INCLUDE.h"
-#include "RendererController.h"
+#include "PageController.h"
 #include "Bulb.h"
 #include "PC.h"
 

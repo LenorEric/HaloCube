@@ -82,6 +82,10 @@ uint8_t MPU6050_init() {
     return 0;
 }
 
+__weak uint8_t mpu_dmp_get_data(float *p,float *r, float*y){
+    return -1;
+}
+
 void DMPGetDirection(uint8_t *direction) {
     float pitch = 0, roll = 0, yaw = 0;
     mpu_dmp_get_data(&pitch, &roll, &yaw);

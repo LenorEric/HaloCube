@@ -96,7 +96,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-    printf("!!Hardware Fault!!\r\n");
+    printf("!!Fault!!: Hardware Fault\r\n");
     __set_FAULTMASK(1);
     HAL_NVIC_SystemReset();
   /* USER CODE END HardFault_IRQn 0 */

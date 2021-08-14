@@ -201,7 +201,7 @@ int main(void) {
     MX_I2C3_Init();
     /* USER CODE BEGIN 2 */
     HAL_Delay(100);
-    printf("\r\n\r\n****System Online****\r\n");
+    printf("\r\n\r\n****System Start****\r\n");
     ///INIT OLED
     OLED_Init();
     OLED_Clear();
@@ -228,31 +228,31 @@ int main(void) {
     while (mpu_dmp_init()) while (MPU6050_init()) HAL_Delay(1000);
 #endif
     HAL_IWDG_Refresh(&hiwdg);
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "mpu6050 inited");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "MPU6050 INITED");
     printf("MPU6050 INITED\r\n");
     ///Get Battery Status
     HCB_GetBattery();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "battery updated");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "Battery Updated");
     printf("Battery Updated\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init nRF24L01
     nRF24L01_INIT();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "nrf24l01 inited");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "nRF24l01 INITED");
     printf("nRF24L01 INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init Power Calculator(Sync device status)
     HAL_Delay(500);
     PowerInit();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "powercalc inited");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "PowerCalc INITED");
     printf("PowerCalc INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Read possible data from EEPROM
     EEPROM_init();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "eeprom inited");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "EEPROM INITED");
     printf("EEPROM INITED\r\n");
     ///Init ESP8266
     ESP8266_WiFi_INIT();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "esp8266 inited");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "ESP8266 INITED");
     printf("ESP8266 INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     HAL_Delay(100);
@@ -261,14 +261,14 @@ int main(void) {
     getTime(getTimeStamp());
     HAL_IWDG_Refresh(&hiwdg);
     HAL_TIM_Base_Start_IT(&htim10);
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "systime inited");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "SysTime INITED");
     printf("SysTime INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init finished
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "init finished");
-    printf("INIT FINISHED, all system online\r\n");
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "INIT Finished");
+    printf("****INIT FINISHED, All System Online****\r\n");
     /* USER CODE END 2 */
 
     /* Infinite loop */

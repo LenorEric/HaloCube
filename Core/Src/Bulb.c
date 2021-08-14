@@ -35,7 +35,7 @@ uint8_t GetBulbStatus() {
     if (strcmp("HC_OK", receive_cmd[1])){
         Bulb_ON_FLAG = 0;
         Power_BulbSetStatus(0);
-        printf("Warning: Unable to get bulb status\r\n");
+        printf("!!ERROR!!: Unable to get bulb status\r\n");
         return 0;
         THROW_ERROR;
     }
@@ -49,6 +49,6 @@ uint8_t GetBulbStatus() {
         Power_BulbSetStatus(0);
         return 0;
     }
-    else printf("Warning: Wrong bulb status got");
+    else printf("!!ERROR!!: Wrong bulb status got");
     return 0;
 }

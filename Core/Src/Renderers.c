@@ -354,3 +354,63 @@ uint8_t RENDER_7daysPage() {
     return 0;
 }
 
+///30days
+uint8_t RENDER_30daysPage() {
+    if (GLOBAL_SELECT_FLAG)
+        return 1;
+    memset(OLEDTemp, 0, sizeof(OLEDTemp));
+    if (GLOBAL_SELECT_FLAG)
+        return 1;
+    uint8_t i = 0, j = 0;
+    memset(OLEDTemp, 0, sizeof(OLEDTemp));
+    const char CR[] = "30Days Consumption Curve";
+    PrintString(CR, 0, 0);
+    char rankNames[3][8];
+    uint32_t rankConsump[3];
+    uint8_t maxLen = 0, tmpLen = 0;
+    memset(rankNames, 0, sizeof(rankNames));
+    memset(rankConsump, 0, sizeof(rankConsump));
+    Power_GiveTopThreeConsumptionOf7days(rankNames, rankConsump);
+    for (i = 0; i < 3 && rankConsump[i]; i++) {
+        tmpLen = PrintString(rankNames[i], 2, 12 + 14 * i);
+        if (tmpLen > maxLen)
+            maxLen = tmpLen;
+    }
+    if (rankConsump[0] == 0)
+        goto NO_CONSUMPTION;
+    DrawRect(maxLen + 2, 13, 105, 19);
+    DrawRect(maxLen + 2, 27, maxLen + 2 + rankConsump[1] * (103 - maxLen) / rankConsump[0], 33);
+    DrawRect(maxLen + 2, 46, maxLen + 2 + rankConsump[2] * (103 - maxLen) / rankConsump[0], 52);
+    char csp[] = "999";
+    for (i = 0; i < 3; i++) {
+        if (!rankConsump[i])
+            break;
+        rankConsump[i] /= 3600;
+        if (rankConsump[i] >= 1000) {
+            if (rankConsump[i] >= 10000) {
+                csp[0] = '0' + rankConsump[i] / 10000;
+                csp[1] = '0' + rankConsump[i] / 1000 % 10;
+                csp[2] = 'k';
+                for (j = 0; j < 3; j++)
+                    PrintLetter(csp[j], 108 + j * 7, 12 + 14 * i);
+
+            } else {
+                csp[0] = '0' + rankConsump[i] / 1000;
+                csp[1] = '0' + rankConsump[i] / 100 % 10;
+                csp[2] = 'k';
+                for (j = 0; j < 3; j++)
+                    PrintLetter(csp[j], 108 + j * 7, 12 + 14 * i);
+                SET_HIGH(114, 19 + 14 * i);
+            }
+        } else {
+            csp[0] = '0' + rankConsump[i] / 100;
+            csp[1] = '0' + rankConsump[i] / 10 % 10;
+            csp[2] = '0' + rankConsump[i] % 10;
+            for (j = 0; j < 3; j++)
+                PrintLetter(csp[j], 108 + j * 7, 12 + 14 * i);
+        }
+    }
+    NO_CONSUMPTION:
+    updateFromTemp();
+    return 0;
+}

@@ -182,7 +182,7 @@ uint64_t getTimeStamp() {
                 break;
         }
         if (i == SEARCH_DEPTH){
-            printf("Get time failed: Unexpected cmd back\r\n");
+            printf("Get time failed: Unexpected cmd acquired\r\n");
             return 0;
         }
     }

@@ -96,6 +96,18 @@ void newPage() {
     PageList[pageNum].selectIcon[3] = ICON16_Return;
     PageList[pageNum].selfRender = RENDER_7daysPage;
     pageNum++;
+
+    ///Statistics - 30days 4
+    PageList[pageNum].actionFunc[0] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[0] = ICON16_Back;
+    PageList[pageNum].actionFunc[1] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[1] = ICON16_Back;
+    PageList[pageNum].actionFunc[2] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[2] = ICON16_Back;
+    PageList[pageNum].actionFunc[3] = PF_GotoPage0;
+    PageList[pageNum].selectIcon[3] = ICON16_Return;
+    PageList[pageNum].selfRender = RENDER_30daysPage;
+    pageNum++;
     // todo: Add more pages
 }
 

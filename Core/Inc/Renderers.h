@@ -23,5 +23,6 @@ uint8_t RENDER_TestPage();
 uint8_t RENDER_ShortCutPage();
 uint8_t RENDER_StatisticPage();
 uint8_t RENDER_7daysPage();
+uint8_t RENDER_30daysPage();
 
 #endif //HALOCUBE_DEV_RENDERERS_H

@@ -10,8 +10,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include "USART_REFACTOR.h"
-//#include "inv_mpu.h"
-//#include "inv_mpu_dmp_motion_driver.h"
 
 #define MPU6050_ADDRESS 0xD0u
 

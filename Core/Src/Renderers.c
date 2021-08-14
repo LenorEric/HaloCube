@@ -36,6 +36,8 @@ void PrintLetter(uint8_t letter, uint8_t xpos, uint8_t ypos) {
         char2print = letter + 26;
     else if (letter == ' ')
         return;
+    else if (letter >='A' && letter <= 'Z')
+        char2print = letter - 'A' + 37;
     else
         char2print = 36;
     for (uint8_t y = 0; y < 9; y++) {
@@ -52,23 +54,60 @@ uint8_t PrintString(char *s2p, uint8_t xpos, uint8_t ypos) {
     for (uint8_t i = 0; i < strlen(s2p); i++) {
         PrintLetter(s2p[i], x, ypos);
         switch (s2p[i]) {
-            case 'm':
-                x += 7;
-                break;
-            case 'w':
-                x += 7;
-                break;
             case 'i':
-                x += 4;
-                break;
-            case 'j':
-                x += 5;
+            case 'l':
+            case '!':
+                x+= 2;
                 break;
             case '1':
-                x += 5;
+            case '.':
+                x += 3;
+                break;
+            case 'j':
+            case 'r':
+            case 'I':
+            case '(':
+            case ')':
+            case ',':
+            case ' ':
+                x += 4;
+                break;
+            case 'v':
+            case 'A':
+            case 'C':
+            case 'D':
+            case 'G':
+            case 'H':
+            case 'N':
+            case 'O':
+            case 'Q':
+            case 'T':
+            case 'U':
+            case 'V':
+            case 'X':
+            case 'Y':
+            case '4':
+            case '-':
+            case '^':
+            case '+':
+            case '=':
+                x += 6;
+                break;
+            case '#':
+            case '&':
+            case '~':
+                x += 7;
+                break;
+            case 'm':
+            case 'w':
+            case 'M':
+            case 'W':
+            case '%':
+            case '@':
+                x += 8;
                 break;
             default:
-                x += 6;
+                x += 5;
                 break;
         }
     }
@@ -212,7 +251,7 @@ uint8_t RENDER_StatisticPage() {
         return 1;
     uint8_t i = 0, j = 0;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
-    const char CR[] = "consumption ranking";
+    const char CR[] = "OPQRSTUVWXYZ";//"consumption ranking";
     PrintString(CR, 0, 0);
     char rankNames[3][8];
     uint32_t rankConsump[3];

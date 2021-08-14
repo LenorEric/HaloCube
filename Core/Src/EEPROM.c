@@ -68,4 +68,5 @@ void EEPROM_Data_Save_Task() {
 void EEPROM_Clear() {
     memset(EnergyRecord, 0, sizeof(EnergyRecord));
     EEPROM_Save_Data(1, (uint8_t *) EnergyRecord, sizeof(EnergyRecord));
+    printf("EEPROM Cleared\r\n");
 }

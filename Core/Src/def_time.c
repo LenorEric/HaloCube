@@ -20,7 +20,6 @@ void getTime(uint64_t Net_timeStamp) {
     if (!GLOBAL_TIME_INDICATOR.w_day) GLOBAL_TIME_INDICATOR.w_day=7;
     GLOBAL_TIME_INDICATOR.mon = time->tm_mon +1;
     GLOBAL_TIME_INDICATOR.year = time->tm_year + 1900;
-    /// todo: Date calc
 }
 
 ///Function shell
@@ -64,7 +63,6 @@ void goSec() {
                 GLOBAL_TIME_INDICATOR.hour = 0;
                 ///Each day
                 BT_Push(SHELL_UpdateEEPROM);
-                /// todo: Date calc
             }
         }
     }

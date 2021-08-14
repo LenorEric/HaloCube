@@ -13,7 +13,16 @@
 
 //#define OLED_HOLO_DISPLAY
 
-#define ESP_CONNECT_AP_WHEN_INIT
+#define DL_NONE 0
+#define DL_NORMAL 1
+#define DL_ERROR 2
+#define DL_DEBUG 3
+#define DL_LOG 4
+
+#define DebugLevel DL_DEBUG
+
+//#define ESP_RESTART_WHEN_INIT
+//#define ESP_CONNECT_AP_WHEN_INIT
 
 #define THROW_ERROR while(1) HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_10)
 

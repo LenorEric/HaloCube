@@ -41,7 +41,7 @@ RenderFunc RenderListGet() {
 }
 
 
-Page PageList[31];
+Page PageList[32];
 uint8_t pageNum = 0, currentPage = 0;
 
 void newPage() {
@@ -76,13 +76,25 @@ void newPage() {
     ///Statistics 2
     PageList[pageNum].actionFunc[0] = PF_GotoPage2;
     PageList[pageNum].selectIcon[0] = ICON16_Back;
-    PageList[pageNum].actionFunc[1] = PF_GotoPage2;
+    PageList[pageNum].actionFunc[1] = PF_GotoPage3;
     PageList[pageNum].selectIcon[1] = ICON16_Back;
     PageList[pageNum].actionFunc[2] = PF_GotoPage2;
     PageList[pageNum].selectIcon[2] = ICON16_Back;
     PageList[pageNum].actionFunc[3] = PF_GotoPage0;
     PageList[pageNum].selectIcon[3] = ICON16_Return;
     PageList[pageNum].selfRender = RENDER_StatisticPage;
+    pageNum++;
+
+    ///Statistics - 7days 3
+    PageList[pageNum].actionFunc[0] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[0] = ICON16_Back;
+    PageList[pageNum].actionFunc[1] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[1] = ICON16_Back;
+    PageList[pageNum].actionFunc[2] = PF_GotoPage2;
+    PageList[pageNum].selectIcon[2] = ICON16_Back;
+    PageList[pageNum].actionFunc[3] = PF_GotoPage0;
+    PageList[pageNum].selectIcon[3] = ICON16_Return;
+    PageList[pageNum].selfRender = RENDER_7daysPage;
     pageNum++;
     // todo: Add more pages
 }

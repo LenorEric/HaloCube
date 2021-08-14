@@ -6,7 +6,7 @@
 
 extern I2C_HandleTypeDef hi2c3;
 extern DMA_HandleTypeDef hdma_i2c3_tx;
-extern uint32_t EnergyRecord[31][32];
+extern uint32_t EnergyRecord[30][32];
 
 void EEPROM_I2C_Write_DMA(uint16_t MemAddress, uint8_t *pData, uint16_t Size) {
     while ((&hi2c3)->State != HAL_I2C_STATE_READY);

@@ -17,6 +17,7 @@ void PF_LightBulb();
 void PF_GotoPage0();
 void PF_GotoPage1();
 void PF_GotoPage2();
+void PF_GotoPage3();
 
 
 #endif //HALOCUBE_PAGEFUNCTION_H

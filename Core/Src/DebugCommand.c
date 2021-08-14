@@ -15,16 +15,21 @@ void UART_RxCpltCallBack(void){
         printf("%s", UART_RX_BUF);
         return;
     }
+    if (!strcmp("/help\r\n", UART_RX_BUF)){
+        printf("/HC: Device info\r\n");
+        printf("/EEPROM: EEPROM info\r\n");
+        return;
+    }
     if (!strcmp("/HC -v\r\n", UART_RX_BUF)){
         printf("Firmware Version: Alpha34.ac4cbb5\r\n");
         return;
     }
-    if (!strcmp("/EEPROM -fc\r\n", UART_RX_BUF)){
+    if (!strcmp("/EEPROM -c -f\r\n", UART_RX_BUF)){
         printf("Begin to clear EEPROM\r\n");
         EEPROM_Clear();
         return;
     }
-    if (!strcmp("/EEPROM -fc\r\n", UART_RX_BUF)){
+    if (!strcmp("/EEPROM -c\r\n", UART_RX_BUF)){
         BT_Push(EEPROM_Clear);
         printf("EEPROM Clear On Schedule\r\n");
         return;

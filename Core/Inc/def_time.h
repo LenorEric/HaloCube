@@ -15,7 +15,7 @@
 #include "BackgroundTaskController.h"
 #include "time.h"
 
-#define DT_TS_TODAY GLOBAL_TIME_INDICATOR.timestampOfSec/86400%31
+#define DT_TS_TODAY GLOBAL_TIME_INDICATOR.timestampOfSec/86400%30
 
 typedef struct {
     uint16_t year;

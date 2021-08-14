@@ -32,7 +32,7 @@ void SHELL_getTime() {
 }
 
 void SHELL_UpdateEEPROM(){
-    extern uint32_t EnergyRecord[31][32];
+    extern uint32_t EnergyRecord[30][32];
     for (uint8_t i = 0; i < 32; i++) {
         for (uint8_t j = 0; j < 32; j++) {
             if (EnergyRecord[i][j] == 0xFFFFFFFF || i == (DT_TS_TODAY + 1) % 32)
@@ -47,6 +47,7 @@ void goSec() {
     GLOBAL_TIME_INDICATOR.sec++;
     /// Each sec
     BT_Push(goPowerSec);
+    /// End
     if (GLOBAL_TIME_INDICATOR.sec >= 60) {
         GLOBAL_TIME_INDICATOR.sec = 0;
         GLOBAL_TIME_INDICATOR.min++;
@@ -54,15 +55,18 @@ void goSec() {
         BT_Push(EEPROM_Data_Save_Task);
         BT_Push(SHELL_HCB_GetBattery);
         BT_Push(OLED_Refresh);
+        /// End
         if (GLOBAL_TIME_INDICATOR.min >= 60) {
             GLOBAL_TIME_INDICATOR.min = 0;
             GLOBAL_TIME_INDICATOR.hour++;
             /// Each hour
             BT_Push(SHELL_getTime);
+            /// End
             if (GLOBAL_TIME_INDICATOR.hour >= 24) {
                 GLOBAL_TIME_INDICATOR.hour = 0;
                 ///Each day
                 BT_Push(SHELL_UpdateEEPROM);
+                /// End
             }
         }
     }

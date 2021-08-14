@@ -9,7 +9,9 @@ uint8_t left = 0, right = 0;
 
 void BT_Push(BackgroundTaskFunc func) {
     if (right+1 == left) {
-        printf("BT Buffer overflow\r\n");
+        printf("!!Fault!!: BT overflow\r\n");
+        __set_FAULTMASK(1);
+        HAL_NVIC_SystemReset();
         return;
     }
     BT_List[right++] = func;

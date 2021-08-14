@@ -50,3 +50,7 @@ void PF_GotoPage1() {
 void PF_GotoPage2() {
     GotoPage(2);
 }
+
+void PF_GotoPage3() {
+    GotoPage(3);
+}

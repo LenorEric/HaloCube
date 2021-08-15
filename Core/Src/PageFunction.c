@@ -56,5 +56,5 @@ void PF_GotoPage3() {
 }
 
 void PF_GotoPage4() {
-    GotoPage(3);
+    GotoPage(4);
 }

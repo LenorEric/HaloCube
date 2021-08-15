@@ -5,6 +5,7 @@
 #include "Renderers.h"
 
 #define SET_HIGH(x, y) OLEDTemp[(y)/8][(x)] |= 1<< ((y)%8)
+#define sign(x) x==0?0:(x>0?1:-1)
 
 extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
 extern uint8_t OLEDBuffer[8][128];
@@ -118,6 +119,63 @@ void DrawRect(uint8_t sx, uint8_t sy, uint8_t ex, uint8_t ey) {
     for (uint8_t x = sx; x < ex; x++)
         for (uint8_t y = sy; y < ey; y++)
             SET_HIGH(x, y);
+}
+
+void DrawLine(uint8_t sx, uint8_t sy, uint8_t ex, uint8_t ey) {
+#if DebugLevel >= DL_DEBUG
+    printf("DrawLine from (%d,%d) to (%d,%d)\r\n", sx, sy, ex, ey);
+#endif
+    float rate;
+    uint8_t temp, cx, cy;
+    int8_t dx = abs(sx - ex), dy = abs(sy - ey);
+    float cE;
+    if (dx > dy) {
+        if (sx > ex) {
+            temp = sx;
+            sx = ex;
+            ex = temp;
+            temp = sy;
+            sy = ey;
+            ey = temp;
+        }
+        dx = ex - sx;
+        dy = ey - sy;
+        cx = sx;
+        cy = sy;
+        cE = cy;
+        SET_HIGH(cx, cy);
+        rate = (float) dy / (float) dx;
+        while (cx <= ex) {
+            cx++;
+            cE += rate;
+            if (cE - cy >= 1)
+                cy+=sign(rate);
+            SET_HIGH(cx, cy);
+        }
+    } else {
+        if (sy > ey) {
+            temp = sx;
+            sx = ex;
+            ex = temp;
+            temp = sy;
+            sy = ey;
+            ey = temp;
+        }
+        dx = ex - sx;
+        dy = ey - sy;
+        cx = sx;
+        cy = sy;
+        cE = cx;
+        SET_HIGH(cx, cy);
+        rate = (float) dx / (float) dy;
+        while (cy <= ey) {
+            cy++;
+            cE += rate;
+            if (fabsf(cE - cx) >= 1)
+                cx += sign(rate);
+            SET_HIGH(cx, cy);
+        }
+    }
 }
 
 uint8_t openScreenAnimation() {
@@ -362,13 +420,19 @@ uint8_t RENDER_3daysPage() {
 uint8_t RENDER_30daysPage() {
     if (GLOBAL_SELECT_FLAG)
         return 1;
-    memset(OLEDTemp, 0, sizeof(OLEDTemp));
-    if (GLOBAL_SELECT_FLAG)
-        return 1;
-    uint8_t i = 0, j = 0;
+    uint8_t i;
     memset(OLEDTemp, 0, sizeof(OLEDTemp));
     const char CR[] = "30Days Consumption Curve";
     PrintString(CR, 0, 0);
-
+    uint32_t consumption[30], max = 0;
+    Power_Give30DaysConsumption(consumption);
+    for (i = 0; i < 30; i++)
+        if (consumption[i] > max)
+            max = consumption[i];
+    for (i = 0; i < 29; i++) {
+        SET_HIGH(6 + i * 4, 56 - consumption[i] * 44 / max);
+        DrawLine(6 + i * 4, 56 - consumption[i] * 44 / max, 10 + i * 4, 56 - consumption[i + 1] * 44 / max);
+    }
+    updateFromTemp();
     return 0;
 }

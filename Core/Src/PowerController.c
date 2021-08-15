@@ -77,7 +77,7 @@ void Power_GiveTopThreeConsumption(char name[3][8], uint32_t consumption[3]) {
     }
 }
 
-void Power_GiveTopThreeConsumptionOf3days(char **name, uint32_t *consumption) {
+void Power_GiveTopThreeConsumptionOf3days(char name[3][8], uint32_t consumption[3]) {
     uint32_t energy[ApplianceNumber];
     memset(energy, 0, sizeof(energy));
     for (uint8_t app = 0; app < ApplianceNumber; app++) {
@@ -106,11 +106,11 @@ void Power_GiveTopThreeConsumptionOf3days(char **name, uint32_t *consumption) {
     }
 }
 
-void Power_Give30DaysConsumption(uint32_t *consumption) {
-    memset(consumption, 0, sizeof(consumption));
+void Power_Give30DaysConsumption(uint32_t consumption[30]) {
+    memset(consumption, 0, sizeof(consumption[0]) * 30);
     for (uint8_t app = 0; app < ApplianceNumber; app++) {
-        for (uint8_t day = DT_TS_TODAY+1; day !=DT_TS_TODAY; day = (day + 1) % 30) {
-            consumption[app] += EnergyRecord[day][app];
+        for (uint8_t day = 0; day <= 30; day++) {
+            consumption[day] += EnergyRecord[(DT_TS_TODAY + day + 1) % 30][app];
         }
     }
 }

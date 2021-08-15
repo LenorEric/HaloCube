@@ -16,8 +16,9 @@
 #define DL_NONE 0
 #define DL_NORMAL 1
 #define DL_ERROR 2
-#define DL_DEBUG 3
-#define DL_LOG 4
+#define DL_WARNING 3
+#define DL_DEBUG 4
+#define DL_LOG 5
 
 #define DebugLevel DL_NORMAL
 

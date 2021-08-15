@@ -25,13 +25,13 @@ uint8_t MPU6050_init() {
     data2send = 0x80;
     HAL_StatusTypeDef status = MPU6050_I2C_Write(MPU_PWR_MGMT1_REG, &data2send, 1);
     if (status == HAL_BUSY){
-        printf("HAL_BUSY \r\n");
+        printf("!!ERROR!!: MPU6050 HAL_BUSY \r\n");
         return 1;
     } else if (status == HAL_ERROR){
-        printf("HAL_ERROR \r\n");
+        printf("!!ERROR!!: MPU6050 HAL_ERROR \r\n");
         return 2;
     }else if (status){
-        printf("Unexpected Error \r\n");
+        printf("!!ERROR!!: MPU6050 Unexpected Error \r\n");
         return 3;
     }
     HAL_Delay(10);

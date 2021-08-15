@@ -35,7 +35,9 @@ uint8_t GetBulbStatus() {
     if (strcmp("HC_OK", receive_cmd[1])){
         Bulb_ON_FLAG = 0;
         Power_BulbSetStatus(0);
+#if DebugLevel >= DL_ERROR
         printf("!!ERROR!!: Unable to get bulb status\r\n");
+#endif
         return 0;
         THROW_ERROR;
     }

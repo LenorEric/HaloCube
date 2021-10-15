@@ -223,6 +223,7 @@ int main(void)
     printf("Battery Updated\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///Init nRF24L01
+#ifndef DEMO_VER
     nRF24L01_INIT();
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "nRF24l01 INITED");
     printf("nRF24L01 INITED\r\n");
@@ -233,11 +234,13 @@ int main(void)
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "PowerCalc INITED");
     printf("PowerCalc INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
+#endif
     ///Read possible data from EEPROM
     EEPROM_init();
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "EEPROM INITED");
     printf("EEPROM INITED\r\n");
     ///Init ESP8266
+#ifndef DEMO_VER
     ESP8266_WiFi_INIT();
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "ESP8266 INITED");
     printf("ESP8266 INITED\r\n");
@@ -251,6 +254,7 @@ int main(void)
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "SysTime INITED");
     printf("SysTime INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
+#endif
     ///Init finished
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);

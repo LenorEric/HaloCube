@@ -59,7 +59,7 @@ void EEPROM_Read_Data(uint16_t pos, uint8_t *pData, uint16_t Size) {
 }
 
 void EEPROM_Data_Save_Task() {
-    if (GLOBAL_TIME_INDICATOR.timestampOfSec > 31536000) { /// Ten years
+    if (GLOBAL_TIME_INDICATOR.timestampOfSec > 31536000) { /// Ten years, in case of wrong timestamp
         EEPROM_Save_Data(0, (uint8_t *) &GLOBAL_TIME_INDICATOR.timestampOfSec, 4);
         EEPROM_Save_Data(1 + DT_TS_TODAY * 32, (uint8_t *) EnergyRecord[DT_TS_TODAY], sizeof(EnergyRecord[DT_TS_TODAY]));
     }

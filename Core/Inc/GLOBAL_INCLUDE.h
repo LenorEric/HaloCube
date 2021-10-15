@@ -21,6 +21,7 @@
 #define DL_LOG 5
 
 #define DebugLevel DL_ERROR
+#define DEMO_VER
 
 //#define ESP_RESTART_WHEN_INIT
 //#define ESP_CONNECT_AP_WHEN_INIT

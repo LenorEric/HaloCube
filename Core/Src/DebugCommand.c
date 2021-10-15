@@ -21,7 +21,7 @@ void UART_RxCpltCallBack(void){
         return;
     }
     if (!strcmp("/HC -v\r\n", UART_RX_BUF)){
-        printf("Firmware Version: Alpha34.ac4cbb5\r\n");
+        printf("Firmware Version: Alpha.SR44@63ed849\r\n");
         return;
     }
     if (!strcmp("/EEPROM -c -f\r\n", UART_RX_BUF)){

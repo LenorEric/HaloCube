@@ -17,6 +17,7 @@ void BT_Push(BackgroundTaskFunc func) {
     BT_List[right++] = func;
 }
 
+
 void BT_HandleNextTask() {
     if (left == right){
         return;

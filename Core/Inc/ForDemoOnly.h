@@ -6,6 +6,8 @@
 #define HALOCUBE_FORDEMOONLY_H
 
 #include "EEPROM.h"
+#include <time.h>
+#include <stdlib.h>
 
 void summonDemoData();
 

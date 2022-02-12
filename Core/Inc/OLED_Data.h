@@ -32,6 +32,8 @@ extern const uint8_t ICON16_PC_ON[32];
 extern const uint8_t ICON16_Bulb_ON[32];
 extern const uint8_t ICON16_Blub_OFF[32];
 extern const uint8_t ICON16_Black[32];
+extern const uint8_t ICON16_30[32];
+extern const uint8_t ICON16_3d[32];
 
 
 extern const uint8_t IMG_timeBackground[8][128];

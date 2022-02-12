@@ -9,7 +9,7 @@
 
 extern DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
 extern uint8_t OLEDBuffer[8][128];
-extern uint8_t GLOBAL_PAGE_INDICATOR;
+extern uint8_t GLOBAL_DIRECTION_INDICATOR[2];
 extern uint8_t GLOBAL_SELECT_FLAG;
 extern uint8_t GLOBAL_INITED_FLAG;
 extern Page PageList[31];
@@ -149,7 +149,7 @@ void DrawLine(uint8_t sx, uint8_t sy, uint8_t ex, uint8_t ey) {
             cx++;
             cE += rate;
             if (cE - cy >= 1)
-                cy+=sign(rate);
+                cy += sign(rate);
             SET_HIGH(cx, cy);
         }
     } else {
@@ -293,6 +293,13 @@ uint8_t RENDER_SelectingUI() {
             }
         }
     }
+    uint8_t pos_x, pos_y;
+    pos_x = 64 + GLOBAL_DIRECTION_INDICATOR[1] * 32 / 40 * cos(PI * 2 * GLOBAL_DIRECTION_INDICATOR[0] / 256);
+    pos_y = 32 - GLOBAL_DIRECTION_INDICATOR[1] * 32 / 40 * sin(PI * 2 * GLOBAL_DIRECTION_INDICATOR[0] / 256);
+    SET_HIGH(pos_x + 1, pos_y);
+    SET_HIGH(pos_x - 1, pos_y);
+    SET_HIGH(pos_x, pos_y + 1);
+    SET_HIGH(pos_x, pos_y - 1);
     updateFromTemp();
     return 0;
 }
@@ -429,7 +436,7 @@ uint8_t RENDER_30daysPage() {
     for (i = 0; i < 30; i++)
         if (consumption[i] > max)
             max = consumption[i];
-    for (i = 0; i < 29; i++) {
+    for (i = 0; i < 28; i++) {
         SET_HIGH(6 + i * 4, 56 - consumption[i] * 44 / max);
         DrawLine(6 + i * 4, 56 - consumption[i] * 44 / max, 10 + i * 4, 56 - consumption[i + 1] * 44 / max);
     }

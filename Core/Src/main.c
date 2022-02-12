@@ -190,10 +190,10 @@ int main(void)
     HAL_Delay(100);
     printf("\r\n\r\n****System Start****\r\n");
     ///INIT OLED
+    printf("OLED INITing\r\n");
     OLED_Init();
     OLED_Clear();
     OLED_Refresh();
-    printf("OLED INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
     ///INIT RenderController
     RenderListInit();
@@ -210,12 +210,12 @@ int main(void)
     PageInit();
     HAL_IWDG_Refresh(&hiwdg);
     ///Init MPU6050
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "MPU6050 INITing");
     while (MPU6050_init());
 #ifdef MPU6050_DMP_ON
     while (mpu_dmp_init()) while (MPU6050_init()) HAL_Delay(1000);
 #endif
     HAL_IWDG_Refresh(&hiwdg);
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "MPU6050 INITED");
     printf("MPU6050 INITED\r\n");
     ///Get Battery Status
     HCB_GetBattery();
@@ -236,11 +236,12 @@ int main(void)
     HAL_IWDG_Refresh(&hiwdg);
 #endif
     ///Read possible data from EEPROM
+    strcpy(GLOBAL_INIT_STATE_INDICATOR, "EEPROM INITing");
     EEPROM_init();
-    strcpy(GLOBAL_INIT_STATE_INDICATOR, "EEPROM INITED");
+    summonDemoData();
     printf("EEPROM INITED\r\n");
     ///Init ESP8266
-#ifndef DEMO_VER
+//#ifndef DEMO_VER
     ESP8266_WiFi_INIT();
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "ESP8266 INITED");
     printf("ESP8266 INITED\r\n");
@@ -254,7 +255,7 @@ int main(void)
     strcpy(GLOBAL_INIT_STATE_INDICATOR, "SysTime INITED");
     printf("SysTime INITED\r\n");
     HAL_IWDG_Refresh(&hiwdg);
-#endif
+//#endif
     ///Init finished
     GLOBAL_INITED_FLAG = 1;
     HAL_TIM_Base_Start_IT(&htim11);

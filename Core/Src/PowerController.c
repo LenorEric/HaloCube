@@ -10,7 +10,7 @@ uint32_t EnergyRecord[30][32];
 #define EnergyAC EnergyRecord[DT_TS_TODAY][2]
 #define EnergyFridge EnergyRecord[DT_TS_TODAY][3]
 #define ApplianceNumber 4
-uint16_t PowerBulb = 18, PowerPC = 50, PowerAC = 700, PowerFridge = 25;
+uint16_t PowerBulb = 18, PowerPC = 50, PowerAC = 700, PowerFridge = 40;
 char appName[][8] = {"bulb", "pc", "ac", "fridge"};
 uint32_t PowerStatusFlag = 0; ///Each bit is a flag. From low to high(Bulb PC AC)
 

@@ -5,13 +5,15 @@
 #ifndef HALOCUBE_DEV_GLOBAL_INCLUDE_H
 #define HALOCUBE_DEV_GLOBAL_INCLUDE_H
 
+#define PI 3.14159265
+
 #include "stm32f4xx_hal.h"
 #include "USART_REFACTOR.h"
 
 //#define MPU6050_IGNORE_SELF_TEST
 //#define MPU6050_DMP_ON
 
-//#define OLED_HOLO_DISPLAY
+#define OLED_HOLO_DISPLAY
 
 #define DL_NONE 0
 #define DL_NORMAL 1

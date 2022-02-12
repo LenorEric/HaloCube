@@ -44,6 +44,7 @@ extern "C" {
 #include "nRF24L01.h"
 #include "EEPROM.h"
 #include "BackgroundTaskController.h"
+#include "ForDemoOnly.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
